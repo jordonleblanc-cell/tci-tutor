@@ -1,8 +1,30 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import google.generativeai as genai
 
 # --- CONFIGURATION ---
 st.set_page_config(page_title="TCI Staff Training", page_icon="🛡️", layout="centered")
+
+# --- SCROLL TO TOP LOGIC ---
+def scroll_to_top():
+    """Injects JS to scroll the page to the top."""
+    js = """
+    <script>
+        // Try to scroll the main view container
+        var body = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+        if (body) {
+            body.scrollTop = 0;
+        }
+        // Fallback for different browser behaviors
+        window.scrollTo(0, 0);
+    </script>
+    """
+    components.html(js, height=0)
+
+# Check if a scroll is requested from the previous interaction
+if "scroll_needed" in st.session_state and st.session_state.scroll_needed:
+    scroll_to_top()
+    st.session_state.scroll_needed = False  # Reset the flag
 
 # --- API KEY SETUP ---
 if "GOOGLE_API_KEY" in st.secrets:
@@ -22,27 +44,21 @@ if "module" not in st.session_state:
 # --- AI FEEDBACK FUNCTION ---
 def get_ai_feedback(user_response, scenario_context, correct_concept):
     if not api_key:
-        return "⚠️ AI features disabled. Please check your API key."
+        return "⚠️ AI features disabled."
     try:
-        # Using gemini-2.0-flash based on your account access
+        # Using gemini-2.0-flash based on your access
         model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""
-        You are an expert TCI (Therapeutic Crisis Intervention) instructor.
-        
-        Scenario Context: {scenario_context}
-        The User was asked: "How should you respond/interpret this?"
-        The User answered: "{user_response}"
-        
-        Task:
-        1. Compare their answer to the TCI concept: '{correct_concept}'.
-        2. If they align with TCI principles, praise them specificially on what they got right.
-        3. If they are punitive, blaming, or miss the concept, gently correct them.
-        4. Keep response encouraging and under 4 sentences.
+        You are an expert TCI instructor.
+        Scenario: {scenario_context}
+        User Answer: "{user_response}"
+        Task: Compare answer to TCI concept '{correct_concept}'. 
+        Provide specific, encouraging feedback. Correct any punitive or non-therapeutic language.
         """
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
-        return f"Error interacting with AI: {e}"
+        return f"Error: {e}"
 
 # --- MAIN APP ---
 st.title("🛡️ Therapeutic Crisis Intervention (TCI) Tutor")
@@ -102,7 +118,9 @@ if st.session_state.module == 1:
         if q1 == "Expressing trauma/distress" and q2 == "Physical Space":
             st.balloons()
             st.success("Correct! Moving to Module 2...")
+            # UPDATE STATE & REQUEST SCROLL
             st.session_state.module = 2
+            st.session_state.scroll_needed = True
             st.rerun()
         else:
             st.error("Please review the answers. Hint: Think about what drives the behavior.")
@@ -163,6 +181,7 @@ elif st.session_state.module == 2:
             st.balloons()
             st.success("Correct! Moving to Module 3...")
             st.session_state.module = 3
+            st.session_state.scroll_needed = True
             st.rerun()
         else:
             st.error("Incorrect. Review the Stress Model.")
@@ -222,6 +241,7 @@ elif st.session_state.module == 3:
             st.balloons()
             st.success("Correct! Moving to Module 4...")
             st.session_state.module = 4
+            st.session_state.scroll_needed = True
             st.rerun()
         else:
             st.error("Incorrect. Review Behavior Support Techniques.")
@@ -277,6 +297,7 @@ elif st.session_state.module == 4:
             st.balloons()
             st.success("Correct! Moving to Module 5...")
             st.session_state.module = 5
+            st.session_state.scroll_needed = True
             st.rerun()
         else:
             st.error("Incorrect. Check the 'Crisis Co-Regulation' steps.")
@@ -331,6 +352,7 @@ elif st.session_state.module == 5:
             st.balloons()
             st.success("Correct! Moving to Module 6...")
             st.session_state.module = 6
+            st.session_state.scroll_needed = True
             st.rerun()
         else:
             st.error("Incorrect. Review the I ESCAPE acronym.")
@@ -387,6 +409,7 @@ elif st.session_state.module == 6:
             st.balloons()
             st.success("🎉 CONGRATULATIONS! You have completed the full TCI refresher course.")
             st.session_state.module = 7
+            st.session_state.scroll_needed = True
             st.rerun()
         else:
             st.error("Incorrect. These are life-saving protocols. Please review.")
@@ -397,4 +420,5 @@ elif st.session_state.module == 7:
     st.write("Remember: **Support** first, **Teach** second.")
     if st.button("Restart Training"):
         st.session_state.module = 1
+        st.session_state.scroll_needed = True
         st.rerun()
