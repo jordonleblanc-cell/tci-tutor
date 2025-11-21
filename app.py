@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 
 # --- CONFIGURATION ---
-st.set_page_config(page_title="TCI Staff Training", page_icon="🛡️", layout="wide")
+st.set_page_config(page_title="TCI Staff Training", page_icon="🛡️", layout="centered")
 
 # --- API KEY SETUP ---
 if "GOOGLE_API_KEY" in st.secrets:
@@ -47,36 +47,41 @@ st.progress(st.session_state.module / 7)
 if st.session_state.module == 1:
     st.header("Module 1: Crisis Prevention & The Milieu")
     
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.subheader("1.1 The Trauma-Informed Approach")
-        st.markdown("""
-        * **Pain-Based Behavior:** Aggression, withdrawal, and defiance are often expressions of **pain or trauma**, not willful bad behavior.
-        * **The Goal:** To help children learn to cope with stress, not just to enforce compliance.
-        * **The Triune Brain:**
-            * **Thinking Brain:** Reasoning (Offline during stress).
-            * **Survival Brain:** Fight, Flight, or Freeze (In charge during stress).
-        """)
-        
-        st.subheader("1.2 The Therapeutic Milieu")
-        st.info("""
-        The "Milieu" is the environment. We must manage 5 spaces:
-        1. **Ideological:** Values (Learning > Control).
-        2. **Physical:** Safety, noise, lighting, clutter.
-        3. **Cultural:** Accepting the child's identity.
-        4. **Social:** Relationships and routines.
-        5. **Emotional:** Safety and emotional competence.
-        """)
-
-    with col2:
-        st.markdown("### 🧠 AI Scenario")
-        st.write("**Scenario:** Marcus (10yo) flips a chair because he has to stop playing. He screams 'I hate you!' and curls into a ball.")
-        ans1 = st.text_area("Using the Triune Brain, is he being 'bad'? What is happening?", height=150)
-        if st.button("Get AI Feedback"):
-            with st.spinner("Checking..."):
-                st.success(get_ai_feedback(ans1, "Child flips chair/curls in ball.", "Survival Brain (Fight/Flight/Freeze) & Pain-Based Behavior"))
+    # --- TEACHING CONTENT ---
+    st.subheader("1.1 The Trauma-Informed Approach")
+    st.markdown("""
+    * **Pain-Based Behavior:** Aggression, withdrawal, and defiance are often expressions of **pain or trauma**, not willful bad behavior.
+    * **The Goal:** To help children learn to cope with stress, not just to enforce compliance.
+    * **The Triune Brain:**
+        * **Thinking Brain:** Reasoning (Offline during stress).
+        * **Survival Brain:** Fight, Flight, or Freeze (In charge during stress).
+    """)
+    
+    st.subheader("1.2 The Therapeutic Milieu")
+    st.info("""
+    The "Milieu" is the environment. We must manage 5 spaces:
+    1. **Ideological:** Values (Learning > Control).
+    2. **Physical:** Safety, noise, lighting, clutter.
+    3. **Cultural:** Accepting the child's identity.
+    4. **Social:** Relationships and routines.
+    5. **Emotional:** Safety and emotional competence.
+    """)
 
     st.divider()
+
+    # --- AI SCENARIO ---
+    st.subheader("🧠 AI Scenario Practice")
+    st.write("**Scenario:** Marcus (10yo) flips a chair because he has to stop playing. He screams 'I hate you!' and curls into a ball.")
+    
+    ans1 = st.text_area("Using the Triune Brain model, is he being 'bad'? What is happening?", height=100)
+    
+    if st.button("Get AI Feedback"):
+        with st.spinner("Checking..."):
+            st.success(get_ai_feedback(ans1, "Child flips chair/curls in ball.", "Survival Brain (Fight/Flight/Freeze) & Pain-Based Behavior"))
+
+    st.divider()
+
+    # --- KNOWLEDGE CHECK ---
     st.subheader("📝 Module 1 Knowledge Check")
     
     q1 = st.radio("1. 'Pain-based behavior' means the child is:", 
@@ -100,37 +105,42 @@ if st.session_state.module == 1:
 elif st.session_state.module == 2:
     st.header("Module 2: Understanding the Crisis")
     
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.subheader("2.1 The Stress Model of Crisis")
-        st.markdown("""
-        A crisis follows a curve:
-        1.  **Baseline:** Normal state (may still be anxious).
-        2.  **Trigger:** The event that starts the stress.
-        3.  **Escalation:** Agitation increases. **Intervene here!**
-        4.  **Outburst:** Violence/Aggression (Survival Mode).
-        5.  **Recovery:** Return to calm. Opportunity for learning.
-        """)
-        
-        st.subheader("2.2 Goals & Assessment")
-        st.warning("**Two Goals:** 1. Support (reduce stress/risk). 2. Teach (coping skills).")
-        st.markdown("""
-        **The 4 Questions:**
-        1. What am I feeling?
-        2. What does the child feel/need?
-        3. How is the environment affecting this?
-        4. How do I best respond?
-        """)
-
-    with col2:
-        st.markdown("### 🧠 AI Scenario")
-        st.write("**Scenario:** Sarah fails a test. She slams her book and paces (Escalation). She has NOT hit anyone.")
-        ans2 = st.text_area("According to the 'Two Goals', what is your job right now?", height=150)
-        if st.button("Get AI Feedback"):
-            with st.spinner("Checking..."):
-                st.success(get_ai_feedback(ans2, "Child escalating but not violent.", "Support: Reduce stress/risk. Teaching happens later."))
+    # --- TEACHING CONTENT ---
+    st.subheader("2.1 The Stress Model of Crisis")
+    st.markdown("""
+    A crisis follows a curve:
+    1.  **Baseline:** Normal state (may still be anxious).
+    2.  **Trigger:** The event that starts the stress.
+    3.  **Escalation:** Agitation increases. **Intervene here!**
+    4.  **Outburst:** Violence/Aggression (Survival Mode).
+    5.  **Recovery:** Return to calm. Opportunity for learning.
+    """)
+    
+    st.subheader("2.2 Goals & Assessment")
+    st.warning("**Two Goals:** 1. Support (reduce stress/risk). 2. Teach (coping skills).")
+    st.markdown("""
+    **The 4 Questions:**
+    1. What am I feeling?
+    2. What does the child feel/need?
+    3. How is the environment affecting this?
+    4. How do I best respond?
+    """)
 
     st.divider()
+
+    # --- AI SCENARIO ---
+    st.subheader("🧠 AI Scenario Practice")
+    st.write("**Scenario:** Sarah fails a test. She slams her book and paces (Escalation). She has NOT hit anyone.")
+    
+    ans2 = st.text_area("According to the 'Two Goals', what is your job right now?", height=100)
+    
+    if st.button("Get AI Feedback"):
+        with st.spinner("Checking..."):
+            st.success(get_ai_feedback(ans2, "Child escalating but not violent.", "Support: Reduce stress/risk. Teaching happens later."))
+
+    st.divider()
+
+    # --- KNOWLEDGE CHECK ---
     st.subheader("📝 Module 2 Knowledge Check")
     
     q1 = st.radio("1. In which phase is a child most likely to be violent?", 
@@ -154,36 +164,41 @@ elif st.session_state.module == 2:
 elif st.session_state.module == 3:
     st.header("Module 3: De-Escalating the Crisis")
     
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.subheader("3.1 Active Listening")
-        st.markdown("""
-        Validating feelings buys time for the thinking brain.
-        * **Nonverbal:** Silence, nods, facial expression.
-        * **Reflective:** "You seem really angry about..."
-        """)
-        
-        st.subheader("3.2 Behavior Support Techniques")
-        st.info("""
-        * **Prompting:** Gentle reminders.
-        * **Hurdle Help:** Assisting with a frustrating task.
-        * **Redirection:** Shifting focus.
-        * **Proximity:** Moving closer to support.
-        * **Caring Gesture:** Building connection.
-        """)
-        
-        st.subheader("3.3 Power Struggles")
-        st.markdown("**Strategy: Drop the Rope.** Listen, validate, give choices.")
-
-    with col2:
-        st.markdown("### 🧠 AI Scenario")
-        st.write("**Scenario:** You tell Jason to clean his room. He yells 'Make me!' You feel angry.")
-        ans3 = st.text_area("How do you 'Drop the Rope'?", height=150)
-        if st.button("Get AI Feedback"):
-            with st.spinner("Checking..."):
-                st.success(get_ai_feedback(ans3, "Child challenges authority.", "Drop the rope. Validate feelings, give choices, step back."))
+    # --- TEACHING CONTENT ---
+    st.subheader("3.1 Active Listening")
+    st.markdown("""
+    Validating feelings buys time for the thinking brain.
+    * **Nonverbal:** Silence, nods, facial expression.
+    * **Reflective:** "You seem really angry about..."
+    """)
+    
+    st.subheader("3.2 Behavior Support Techniques")
+    st.info("""
+    * **Prompting:** Gentle reminders.
+    * **Hurdle Help:** Assisting with a frustrating task.
+    * **Redirection:** Shifting focus.
+    * **Proximity:** Moving closer to support.
+    * **Caring Gesture:** Building connection.
+    """)
+    
+    st.subheader("3.3 Power Struggles")
+    st.markdown("**Strategy: Drop the Rope.** Listen, validate, give choices.")
 
     st.divider()
+
+    # --- AI SCENARIO ---
+    st.subheader("🧠 AI Scenario Practice")
+    st.write("**Scenario:** You tell Jason to clean his room. He yells 'Make me!' You feel angry.")
+    
+    ans3 = st.text_area("How do you 'Drop the Rope'?", height=100)
+    
+    if st.button("Get AI Feedback"):
+        with st.spinner("Checking..."):
+            st.success(get_ai_feedback(ans3, "Child challenges authority.", "Drop the rope. Validate feelings, give choices, step back."))
+
+    st.divider()
+
+    # --- KNOWLEDGE CHECK ---
     st.subheader("📝 Module 3 Knowledge Check")
     
     q1 = st.radio("1. Helping a child with a difficult task to prevent frustration is called:", 
@@ -207,32 +222,37 @@ elif st.session_state.module == 3:
 elif st.session_state.module == 4:
     st.header("Module 4: Managing the Crisis")
     
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.subheader("4.1 Nonverbal Communication")
-        st.markdown("""
-        * **Eye Contact:** Avoid staring (it's threatening).
-        * **Body Language:** Open stance, hands visible, off-center.
-        * **Space:** Give MORE personal space.
-        """)
-        
-        st.subheader("4.2 Crisis Co-Regulation")
-        st.markdown("""
-        When the child loses control, YOU provide the calm.
-        * **Think:** Ask the 4 Questions.
-        * **Do:** Deep breath. Step back. Give time.
-        * **Say:** Very little. "I can see you are upset."
-        """)
-
-    with col2:
-        st.markdown("### 🧠 AI Scenario")
-        st.write("**Scenario:** The child is screaming and looking for a weapon. You are the target.")
-        ans4 = st.text_area("Describe your body language and action.", height=150)
-        if st.button("Get AI Feedback"):
-            with st.spinner("Checking..."):
-                st.success(get_ai_feedback(ans4, "Child in outburst, user is target.", "Remove the target (step away). Open stance. Hands visible."))
+    # --- TEACHING CONTENT ---
+    st.subheader("4.1 Nonverbal Communication")
+    st.markdown("""
+    * **Eye Contact:** Avoid staring (it's threatening).
+    * **Body Language:** Open stance, hands visible, off-center.
+    * **Space:** Give MORE personal space.
+    """)
+    
+    st.subheader("4.2 Crisis Co-Regulation")
+    st.markdown("""
+    When the child loses control, YOU provide the calm.
+    * **Think:** Ask the 4 Questions.
+    * **Do:** Deep breath. Step back. Give time.
+    * **Say:** Very little. "I can see you are upset."
+    """)
 
     st.divider()
+
+    # --- AI SCENARIO ---
+    st.subheader("🧠 AI Scenario Practice")
+    st.write("**Scenario:** The child is screaming and looking for a weapon. You are the target.")
+    
+    ans4 = st.text_area("Describe your body language and action.", height=100)
+    
+    if st.button("Get AI Feedback"):
+        with st.spinner("Checking..."):
+            st.success(get_ai_feedback(ans4, "Child in outburst, user is target.", "Remove the target (step away). Open stance. Hands visible."))
+
+    st.divider()
+
+    # --- KNOWLEDGE CHECK ---
     st.subheader("📝 Module 4 Knowledge Check")
     
     q1 = st.radio("1. What is the first thing to 'DO' in Crisis Co-Regulation?", 
@@ -256,31 +276,36 @@ elif st.session_state.module == 4:
 elif st.session_state.module == 5:
     st.header("Module 5: Recovery")
     
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.subheader("5.1 The Life Space Interview (LSI)")
-        st.markdown("Goal: Return child to normal and **Teach new skills**.")
-        
-        st.subheader("5.2 I ESCAPE Steps")
-        st.info("""
-        * **I** - Identify time/place.
-        * **E** - Explore child's view.
-        * **S** - Summarize feelings.
-        * **C** - Connect trigger to behavior.
-        * **A** - Alternative responses.
-        * **P** - Plan/Practice.
-        * **E** - Enter back to routine.
-        """)
-
-    with col2:
-        st.markdown("### 🧠 AI Scenario")
-        st.write("**Scenario:** The child is calm. You are doing the LSI. You just Summarized. What comes next?")
-        ans5 = st.text_area("What is the 'C' step and what does it mean?", height=150)
-        if st.button("Get AI Feedback"):
-            with st.spinner("Checking..."):
-                st.success(get_ai_feedback(ans5, "LSI step C.", "Connect. Connect trigger -> feeling -> behavior."))
+    # --- TEACHING CONTENT ---
+    st.subheader("5.1 The Life Space Interview (LSI)")
+    st.markdown("Goal: Return child to normal and **Teach new skills**.")
+    
+    st.subheader("5.2 I ESCAPE Steps")
+    st.info("""
+    * **I** - Identify time/place.
+    * **E** - Explore child's view.
+    * **S** - Summarize feelings.
+    * **C** - Connect trigger to behavior.
+    * **A** - Alternative responses.
+    * **P** - Plan/Practice.
+    * **E** - Enter back to routine.
+    """)
 
     st.divider()
+
+    # --- AI SCENARIO ---
+    st.subheader("🧠 AI Scenario Practice")
+    st.write("**Scenario:** The child is calm. You are doing the LSI. You just Summarized. What comes next?")
+    
+    ans5 = st.text_area("What is the 'C' step and what does it mean?", height=100)
+    
+    if st.button("Get AI Feedback"):
+        with st.spinner("Checking..."):
+            st.success(get_ai_feedback(ans5, "LSI step C.", "Connect. Connect trigger -> feeling -> behavior."))
+
+    st.divider()
+
+    # --- KNOWLEDGE CHECK ---
     st.subheader("📝 Module 5 Knowledge Check")
     
     q1 = st.radio("1. What does the 'C' in I ESCAPE stand for?", 
@@ -304,33 +329,38 @@ elif st.session_state.module == 5:
 elif st.session_state.module == 6:
     st.header("Module 6: Safety Interventions")
     
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.subheader("6.1 Physical Restraint Risks")
-        st.error("""
-        **WARNING:** Restraint is ONLY for imminent safety risk.
-        **Risks:**
-        * **Positional Asphyxia:** Fatal respiratory arrest caused by body position.
-        * **Trauma:** Re-traumatizing the child.
-        """)
-        
-        st.subheader("6.2 Safety Principles")
-        st.markdown("""
-        * **Never** put weight on chest/back.
-        * **Never** ignore "I can't breathe".
-        * **Monitor:** Skin color, respiration.
-        * **Goal:** Safety, not compliance.
-        """)
-
-    with col2:
-        st.markdown("### 🧠 AI Scenario")
-        st.write("**Scenario:** You are restraining a child. He says 'I can't breathe.' You think he is lying.")
-        ans6 = st.text_area("What is the ONLY acceptable response?", height=150)
-        if st.button("Get AI Feedback"):
-            with st.spinner("Checking..."):
-                st.success(get_ai_feedback(ans6, "Child says 'I can't breathe'.", "Release immediately or adjust position. Never ignore."))
+    # --- TEACHING CONTENT ---
+    st.subheader("6.1 Physical Restraint Risks")
+    st.error("""
+    **WARNING:** Restraint is ONLY for imminent safety risk.
+    **Risks:**
+    * **Positional Asphyxia:** Fatal respiratory arrest caused by body position.
+    * **Trauma:** Re-traumatizing the child.
+    """)
+    
+    st.subheader("6.2 Safety Principles")
+    st.markdown("""
+    * **Never** put weight on chest/back.
+    * **Never** ignore "I can't breathe".
+    * **Monitor:** Skin color, respiration.
+    * **Goal:** Safety, not compliance.
+    """)
 
     st.divider()
+
+    # --- AI SCENARIO ---
+    st.subheader("🧠 AI Scenario Practice")
+    st.write("**Scenario:** You are restraining a child. He says 'I can't breathe.' You think he is lying.")
+    
+    ans6 = st.text_area("What is the ONLY acceptable response?", height=100)
+    
+    if st.button("Get AI Feedback"):
+        with st.spinner("Checking..."):
+            st.success(get_ai_feedback(ans6, "Child says 'I can't breathe'.", "Release immediately or adjust position. Never ignore."))
+
+    st.divider()
+
+    # --- KNOWLEDGE CHECK ---
     st.subheader("📝 Module 6 Knowledge Check")
     
     q1 = st.radio("1. What is Positional Asphyxia?", 
