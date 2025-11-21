@@ -47,21 +47,20 @@ st.progress(st.session_state.module / 7)
 if st.session_state.module == 1:
     st.header("Module 1: Crisis Prevention & The Milieu")
     
-    # --- TEACHING CONTENT ---
     col1, col2 = st.columns([2, 1])
     with col1:
         st.subheader("1.1 The Trauma-Informed Approach")
         st.markdown("""
-        * [cite_start]**Pain-Based Behavior:** Aggression, withdrawal, and defiance are often expressions of **pain or trauma**, not willful bad behavior[cite: 120].
+        * **Pain-Based Behavior:** Aggression, withdrawal, and defiance are often expressions of **pain or trauma**, not willful bad behavior.
         * **The Goal:** To help children learn to cope with stress, not just to enforce compliance.
         * **The Triune Brain:**
             * **Thinking Brain:** Reasoning (Offline during stress).
-            * [cite_start]**Survival Brain:** Fight, Flight, or Freeze (In charge during stress)[cite: 588].
+            * **Survival Brain:** Fight, Flight, or Freeze (In charge during stress).
         """)
         
         st.subheader("1.2 The Therapeutic Milieu")
         st.info("""
-        [cite_start]The "Milieu" is the environment. We must manage 5 spaces[cite: 350]:
+        The "Milieu" is the environment. We must manage 5 spaces:
         1. **Ideological:** Values (Learning > Control).
         2. **Physical:** Safety, noise, lighting, clutter.
         3. **Cultural:** Accepting the child's identity.
@@ -105,7 +104,7 @@ elif st.session_state.module == 2:
     with col1:
         st.subheader("2.1 The Stress Model of Crisis")
         st.markdown("""
-        [cite_start]A crisis follows a curve[cite: 806]:
+        A crisis follows a curve:
         1.  **Baseline:** Normal state (may still be anxious).
         2.  **Trigger:** The event that starts the stress.
         3.  **Escalation:** Agitation increases. **Intervene here!**
@@ -116,7 +115,7 @@ elif st.session_state.module == 2:
         st.subheader("2.2 Goals & Assessment")
         st.warning("**Two Goals:** 1. Support (reduce stress/risk). 2. Teach (coping skills).")
         st.markdown("""
-        [cite_start]**The 4 Questions[cite: 889]:**
+        **The 4 Questions:**
         1. What am I feeling?
         2. What does the child feel/need?
         3. How is the environment affecting this?
@@ -159,7 +158,7 @@ elif st.session_state.module == 3:
     with col1:
         st.subheader("3.1 Active Listening")
         st.markdown("""
-        [cite_start]Validating feelings buys time for the thinking brain[cite: 1059].
+        Validating feelings buys time for the thinking brain.
         * **Nonverbal:** Silence, nods, facial expression.
         * **Reflective:** "You seem really angry about..."
         """)
@@ -167,14 +166,14 @@ elif st.session_state.module == 3:
         st.subheader("3.2 Behavior Support Techniques")
         st.info("""
         * **Prompting:** Gentle reminders.
-        * [cite_start]**Hurdle Help:** Assisting with a frustrating task[cite: 1305].
+        * **Hurdle Help:** Assisting with a frustrating task.
         * **Redirection:** Shifting focus.
         * **Proximity:** Moving closer to support.
         * **Caring Gesture:** Building connection.
         """)
         
         st.subheader("3.3 Power Struggles")
-        [cite_start]st.markdown("**Strategy: Drop the Rope.** Listen, validate, give choices[cite: 1528].")
+        st.markdown("**Strategy: Drop the Rope.** Listen, validate, give choices.")
 
     with col2:
         st.markdown("### 🧠 AI Scenario")
@@ -214,12 +213,12 @@ elif st.session_state.module == 4:
         st.markdown("""
         * **Eye Contact:** Avoid staring (it's threatening).
         * **Body Language:** Open stance, hands visible, off-center.
-        * [cite_start]**Space:** Give MORE personal space[cite: 1608].
+        * **Space:** Give MORE personal space.
         """)
         
         st.subheader("4.2 Crisis Co-Regulation")
         st.markdown("""
-        [cite_start]When the child loses control, YOU provide the calm[cite: 1737].
+        When the child loses control, YOU provide the calm.
         * **Think:** Ask the 4 Questions.
         * **Do:** Deep breath. Step back. Give time.
         * **Say:** Very little. "I can see you are upset."
@@ -260,14 +259,14 @@ elif st.session_state.module == 5:
     col1, col2 = st.columns([2, 1])
     with col1:
         st.subheader("5.1 The Life Space Interview (LSI)")
-        [cite_start]st.markdown("Goal: Return child to normal and **Teach new skills**[cite: 1952].")
+        st.markdown("Goal: Return child to normal and **Teach new skills**.")
         
         st.subheader("5.2 I ESCAPE Steps")
         st.info("""
         * **I** - Identify time/place.
         * **E** - Explore child's view.
         * **S** - Summarize feelings.
-        * [cite_start]**C** - Connect trigger to behavior[cite: 2021].
+        * **C** - Connect trigger to behavior.
         * **A** - Alternative responses.
         * **P** - Plan/Practice.
         * **E** - Enter back to routine.
@@ -275,7 +274,7 @@ elif st.session_state.module == 5:
 
     with col2:
         st.markdown("### 🧠 AI Scenario")
-        st.write("**Scenario:** You are doing the LSI. You just Summarized. What comes next?")
+        st.write("**Scenario:** The child is calm. You are doing the LSI. You just Summarized. What comes next?")
         ans5 = st.text_area("What is the 'C' step and what does it mean?", height=150)
         if st.button("Get AI Feedback"):
             with st.spinner("Checking..."):
@@ -309,17 +308,17 @@ elif st.session_state.module == 6:
     with col1:
         st.subheader("6.1 Physical Restraint Risks")
         st.error("""
-        [cite_start]**WARNING:** Restraint is ONLY for imminent safety risk[cite: 2309].
+        **WARNING:** Restraint is ONLY for imminent safety risk.
         **Risks:**
-        * [cite_start]**Positional Asphyxia:** Fatal respiratory arrest caused by body position[cite: 2552].
+        * **Positional Asphyxia:** Fatal respiratory arrest caused by body position.
         * **Trauma:** Re-traumatizing the child.
         """)
         
         st.subheader("6.2 Safety Principles")
         st.markdown("""
-        * [cite_start]**Never** put weight on chest/back[cite: 2651].
-        * [cite_start]**Never** ignore "I can't breathe"[cite: 2662].
-        * [cite_start]**Monitor:** Skin color, respiration[cite: 2637].
+        * **Never** put weight on chest/back.
+        * **Never** ignore "I can't breathe".
+        * **Monitor:** Skin color, respiration.
         * **Goal:** Safety, not compliance.
         """)
 
