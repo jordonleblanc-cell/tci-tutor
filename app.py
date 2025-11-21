@@ -1,8 +1,25 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import google.generativeai as genai
 
 # --- CONFIGURATION ---
 st.set_page_config(page_title="TCI Staff Training", page_icon="🛡️", layout="centered")
+
+# --- SCROLL TO TOP HELPER ---
+# This function injects JavaScript to scroll the window to the top
+def scroll_to_top():
+    js = """
+    <script>
+        var body = window.parent.document.querySelector(".main");
+        if (body) { body.scrollTop = 0; }
+    </script>
+    """
+    components.html(js, height=0)
+
+# Check if we need to scroll (from the previous button click)
+if "force_scroll" in st.session_state and st.session_state.force_scroll:
+    scroll_to_top()
+    st.session_state.force_scroll = False
 
 # --- API KEY SETUP ---
 if "GOOGLE_API_KEY" in st.secrets:
@@ -93,8 +110,8 @@ if st.session_state.module == 1:
     if st.button("Check Answers & Continue"):
         if q1 == "Expressing trauma/distress" and q2 == "Physical Space":
             st.balloons()
-            st.success("Correct! Moving to Module 2...")
             st.session_state.module = 2
+            st.session_state.force_scroll = True # Trigger scroll on next load
             st.rerun()
         else:
             st.error("Please review the answers. Hint: Think about what drives the behavior and look at the definitions of the Spaces.")
@@ -152,8 +169,8 @@ elif st.session_state.module == 2:
     if st.button("Check Answers & Continue"):
         if q1 == "Outburst Phase" and q2 == "What am I feeling now?":
             st.balloons()
-            st.success("Correct! Moving to Module 3...")
             st.session_state.module = 3
+            st.session_state.force_scroll = True
             st.rerun()
         else:
             st.error("Incorrect. Review the Stress Model and the 4 Questions.")
@@ -210,8 +227,8 @@ elif st.session_state.module == 3:
     if st.button("Check Answers & Continue"):
         if q1 == "Hurdle Help" and q2 == "Drop the rope and give choices":
             st.balloons()
-            st.success("Correct! Moving to Module 4...")
             st.session_state.module = 4
+            st.session_state.force_scroll = True
             st.rerun()
         else:
             st.error("Incorrect. Review Behavior Support Techniques.")
@@ -264,8 +281,8 @@ elif st.session_state.module == 4:
     if st.button("Check Answers & Continue"):
         if q1 == "Take a deep breath" and q2 == "Give little to no verbal directives":
             st.balloons()
-            st.success("Correct! Moving to Module 5...")
             st.session_state.module = 5
+            st.session_state.force_scroll = True
             st.rerun()
         else:
             st.error("Incorrect. Check the 'Crisis Co-Regulation' steps.")
@@ -317,8 +334,8 @@ elif st.session_state.module == 5:
     if st.button("Check Answers & Continue"):
         if q1 == "Connect trigger to behavior" and q2 == "To teach new coping skills":
             st.balloons()
-            st.success("Correct! Moving to Module 6...")
             st.session_state.module = 6
+            st.session_state.force_scroll = True
             st.rerun()
         else:
             st.error("Incorrect. Review the I ESCAPE acronym.")
@@ -374,6 +391,7 @@ elif st.session_state.module == 6:
             st.balloons()
             st.success("🎉 CONGRATULATIONS! You have completed the full TCI refresher course.")
             st.session_state.module = 7
+            st.session_state.force_scroll = True
             st.rerun()
         else:
             st.error("Incorrect. These are life-saving protocols. Please review.")
@@ -384,4 +402,5 @@ elif st.session_state.module == 7:
     st.write("Remember: **Support** first, **Teach** second.")
     if st.button("Restart Training"):
         st.session_state.module = 1
+        st.session_state.force_scroll = True
         st.rerun()
