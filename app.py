@@ -29,17 +29,17 @@ else:
 
 if api_key:
     genai.configure(api_key=api_key)
+else:
+    st.warning("⚠️ API Key missing. Please add it to secrets.toml or the sidebar.")
 
 # --- SESSION STATE ---
 if "module" not in st.session_state:
     st.session_state.module = 1
-if "bot_history" not in st.session_state:
-    st.session_state.bot_history = [] # To store Q&A
 
-# --- AI FUNCTIONS ---
+# --- AI FEEDBACK FUNCTION ---
 def get_ai_feedback(user_response, scenario_context, correct_concept):
-    """Grading logic for scenarios."""
-    if not api_key: return "⚠️ AI features disabled."
+    if not api_key:
+        return "⚠️ AI features disabled."
     try:
         model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""
@@ -88,9 +88,9 @@ with st.sidebar:
                 st.warning("Please type a question.")
     st.divider()
 
-# --- MAIN APP CONTENT ---
+# --- MAIN APP ---
 st.title("🛡️ Therapeutic Crisis Intervention (TCI) Tutor")
-st.progress(st.session_state.module / 7)
+st.progress(st.session_state.module / 8)
 
 # ==========================================
 # MODULE 1: CRISIS PREVENTION
@@ -100,11 +100,11 @@ if st.session_state.module == 1:
     
     st.subheader("1.1 The Trauma-Informed Approach")
     st.markdown("""
-    * **Pain-Based Behavior:** Aggression, withdrawal, and defiance are often expressions of **pain or trauma**, not willful bad behavior.
+    * [cite_start]**Pain-Based Behavior:** Aggression, withdrawal, and defiance are often expressions of **pain or trauma**, not willful bad behavior[cite: 120].
     * **The Goal:** To help children learn to cope with stress, not just to enforce compliance.
     * **The Triune Brain:**
         * **Thinking Brain:** Reasoning (Offline during stress).
-        * **Survival Brain:** Fight, Flight, or Freeze (In charge during stress).
+        * [cite_start]**Survival Brain:** Fight, Flight, or Freeze (In charge during stress)[cite: 588].
     """)
     
     st.subheader("1.2 The Therapeutic Milieu")
@@ -128,21 +128,10 @@ if st.session_state.module == 1:
 
     st.divider()
 
-    st.subheader("📝 Module 1 Knowledge Check")
-    q1 = st.radio("1. 'Pain-based behavior' means the child is:", 
-                  ["Being manipulative", "Expressing trauma/distress", "Just breaking rules"], index=None, key="m1q1")
-    q2 = st.radio("2. Which 'Space' involves managing lighting, noise, and clutter?", 
-                  ["Ideological Space", "Physical Space", "Social Space"], index=None, key="m1q2")
-
-    if st.button("Check Answers & Continue"):
-        if q1 == "Expressing trauma/distress" and q2 == "Physical Space":
-            st.balloons()
-            st.success("Correct! Moving to Module 2...")
-            st.session_state.module = 2
-            st.session_state.scroll_needed = True
-            st.rerun()
-        else:
-            st.error("Please review the answers.")
+    if st.button("Continue to Module 2 👉"):
+        st.session_state.module = 2
+        st.session_state.scroll_needed = True
+        st.rerun()
 
 # ==========================================
 # MODULE 2: UNDERSTANDING CRISIS
@@ -152,7 +141,7 @@ elif st.session_state.module == 2:
     
     st.subheader("2.1 The Stress Model of Crisis")
     st.markdown("""
-    A crisis follows a curve:
+    [cite_start]A crisis follows a curve[cite: 806]:
     1.  **Baseline:** Normal state (may still be anxious).
     2.  **Trigger:** The event that starts the stress.
     3.  **Escalation:** Agitation increases. **Intervene here!**
@@ -161,11 +150,11 @@ elif st.session_state.module == 2:
     """)
     
     st.subheader("2.2 Goals & Assessment")
-    st.warning("**Two Goals:** 1. Support (reduce stress/risk). 2. Teach (coping skills).")
+    [cite_start]st.warning("**Two Goals:** 1. Support (reduce stress/risk). 2. Teach (coping skills)[cite: 764].")
     st.markdown("""
-    **The 4 Questions:**
-    1. What am I feeling?
-    2. What does the child feel/need?
+    [cite_start]**The 4 Questions[cite: 890]:**
+    1. What am I feeling now?
+    2. What does this child feel, need, or want?
     3. How is the environment affecting this?
     4. How do I best respond?
     """)
@@ -181,21 +170,10 @@ elif st.session_state.module == 2:
 
     st.divider()
 
-    st.subheader("📝 Module 2 Knowledge Check")
-    q1 = st.radio("1. In which phase is a child most likely to be violent?", 
-                  ["Escalation Phase", "Outburst Phase", "Recovery Phase"], index=None, key="m2q1")
-    q2 = st.radio("2. What is the FIRST question you should ask yourself in a crisis?", 
-                  ["What did the child do wrong?", "What am I feeling now?", "Who is to blame?"], index=None, key="m2q2")
-
-    if st.button("Check Answers & Continue"):
-        if q1 == "Outburst Phase" and q2 == "What am I feeling now?":
-            st.balloons()
-            st.success("Correct! Moving to Module 3...")
-            st.session_state.module = 3
-            st.session_state.scroll_needed = True
-            st.rerun()
-        else:
-            st.error("Incorrect. Review the Stress Model.")
+    if st.button("Continue to Module 3 👉"):
+        st.session_state.module = 3
+        st.session_state.scroll_needed = True
+        st.rerun()
 
 # ==========================================
 # MODULE 3: DE-ESCALATION
@@ -205,7 +183,7 @@ elif st.session_state.module == 3:
     
     st.subheader("3.1 Active Listening")
     st.markdown("""
-    Validating feelings buys time for the thinking brain.
+    [cite_start]Validating feelings buys time for the thinking brain[cite: 1065].
     * **Nonverbal:** Silence, nods, facial expression.
     * **Reflective:** "You seem really angry about..."
     """)
@@ -220,7 +198,7 @@ elif st.session_state.module == 3:
     """)
     
     st.subheader("3.3 Power Struggles")
-    st.markdown("**Strategy: Drop the Rope.** Listen, validate, give choices.")
+    [cite_start]st.markdown("**Strategy: Drop the Rope.** Listen, validate, give choices[cite: 1528].")
 
     st.divider()
 
@@ -233,21 +211,10 @@ elif st.session_state.module == 3:
 
     st.divider()
 
-    st.subheader("📝 Module 3 Knowledge Check")
-    q1 = st.radio("1. Helping a child with a difficult task to prevent frustration is called:", 
-                  ["Redirection", "Hurdle Help", "Time Away"], index=None, key="m3q1")
-    q2 = st.radio("2. To avoid a power struggle, you should:", 
-                  ["Argue back to win", "Drop the rope and give choices", "Demand compliance"], index=None, key="m3q2")
-
-    if st.button("Check Answers & Continue"):
-        if q1 == "Hurdle Help" and q2 == "Drop the rope and give choices":
-            st.balloons()
-            st.success("Correct! Moving to Module 4...")
-            st.session_state.module = 4
-            st.session_state.scroll_needed = True
-            st.rerun()
-        else:
-            st.error("Incorrect. Review Behavior Support Techniques.")
+    if st.button("Continue to Module 4 👉"):
+        st.session_state.module = 4
+        st.session_state.scroll_needed = True
+        st.rerun()
 
 # ==========================================
 # MODULE 4: MANAGING THE OUTBURST
@@ -257,7 +224,7 @@ elif st.session_state.module == 4:
     
     st.subheader("4.1 Nonverbal Communication")
     st.markdown("""
-    * **Eye Contact:** Avoid staring (it's threatening).
+    * [cite_start]**Eye Contact:** Avoid staring (it's threatening)[cite: 1582].
     * **Body Language:** Open stance, hands visible, off-center.
     * **Space:** Give MORE personal space.
     """)
@@ -266,7 +233,7 @@ elif st.session_state.module == 4:
     st.markdown("""
     When the child loses control, YOU provide the calm.
     * **Think:** Ask the 4 Questions.
-    * **Do:** Deep breath. Step back. Give time.
+    * [cite_start]**Do:** Deep breath. Step back. Give time[cite: 1783].
     * **Say:** Very little. "I can see you are upset."
     """)
 
@@ -281,21 +248,10 @@ elif st.session_state.module == 4:
 
     st.divider()
 
-    st.subheader("📝 Module 4 Knowledge Check")
-    q1 = st.radio("1. What is the first thing to 'DO' in Crisis Co-Regulation?", 
-                  ["Restrain immediately", "Take a deep breath", "Lecture the child"], index=None, key="m4q1")
-    q2 = st.radio("2. During an outburst, you should:", 
-                  ["Speak loudly", "Give little to no verbal directives", "Stare the child down"], index=None, key="m4q2")
-
-    if st.button("Check Answers & Continue"):
-        if q1 == "Take a deep breath" and q2 == "Give little to no verbal directives":
-            st.balloons()
-            st.success("Correct! Moving to Module 5...")
-            st.session_state.module = 5
-            st.session_state.scroll_needed = True
-            st.rerun()
-        else:
-            st.error("Incorrect. Check the 'Crisis Co-Regulation' steps.")
+    if st.button("Continue to Module 5 👉"):
+        st.session_state.module = 5
+        st.session_state.scroll_needed = True
+        st.rerun()
 
 # ==========================================
 # MODULE 5: RECOVERY & LSI
@@ -304,7 +260,7 @@ elif st.session_state.module == 5:
     st.header("Module 5: Recovery")
     
     st.subheader("5.1 The Life Space Interview (LSI)")
-    st.markdown("Goal: Return child to normal and **Teach new skills**.")
+    [cite_start]st.markdown("Goal: Return child to normal and **Teach new skills**[cite: 1952].")
     
     st.subheader("5.2 I ESCAPE Steps")
     st.info("""
@@ -328,21 +284,10 @@ elif st.session_state.module == 5:
 
     st.divider()
 
-    st.subheader("📝 Module 5 Knowledge Check")
-    q1 = st.radio("1. What does the 'C' in I ESCAPE stand for?", 
-                  ["Control the child", "Connect trigger to behavior", "Call the parents"], index=None, key="m5q1")
-    q2 = st.radio("2. What is a primary goal of the LSI?", 
-                  ["To punish the child", "To teach new coping skills", "To create a paper trail"], index=None, key="m5q2")
-
-    if st.button("Check Answers & Continue"):
-        if q1 == "Connect trigger to behavior" and q2 == "To teach new coping skills":
-            st.balloons()
-            st.success("Correct! Moving to Module 6...")
-            st.session_state.module = 6
-            st.session_state.scroll_needed = True
-            st.rerun()
-        else:
-            st.error("Incorrect. Review the I ESCAPE acronym.")
+    if st.button("Continue to Module 6 👉"):
+        st.session_state.module = 6
+        st.session_state.scroll_needed = True
+        st.rerun()
 
 # ==========================================
 # MODULE 6: SAFETY INTERVENTIONS
@@ -352,16 +297,16 @@ elif st.session_state.module == 6:
     
     st.subheader("6.1 Physical Restraint Risks")
     st.error("""
-    **WARNING:** Restraint is ONLY for imminent safety risk.
+    [cite_start]**WARNING:** Restraint is ONLY for imminent safety risk[cite: 2309].
     **Risks:**
-    * **Positional Asphyxia:** Fatal respiratory arrest caused by body position.
+    * [cite_start]**Positional Asphyxia:** Fatal respiratory arrest caused by body position[cite: 2552].
     * **Trauma:** Re-traumatizing the child.
     """)
     
     st.subheader("6.2 Safety Principles")
     st.markdown("""
     * **Never** put weight on chest/back.
-    * **Never** ignore "I can't breathe".
+    * [cite_start]**Never** ignore "I can't breathe"[cite: 2662].
     * **Monitor:** Skin color, respiration.
     * **Goal:** Safety, not compliance.
     """)
@@ -377,26 +322,133 @@ elif st.session_state.module == 6:
 
     st.divider()
 
-    st.subheader("📝 Module 6 Knowledge Check")
-    q1 = st.radio("1. What is Positional Asphyxia?", 
-                  ["A seizure", "Fatal respiratory arrest due to body position", "A panic attack"], index=None, key="m6q1")
-    q2 = st.radio("2. When should a restraint end?", 
-                  ["When the child apologizes", "When the child is no longer a danger", "After 15 minutes"], index=None, key="m6q2")
+    if st.button("Start Final Exam 👉"):
+        st.session_state.module = 7
+        st.session_state.scroll_needed = True
+        st.rerun()
 
-    if st.button("Finish Course"):
-        if q1 == "Fatal respiratory arrest due to body position" and q2 == "When the child is no longer a danger":
-            st.balloons()
-            st.success("🎉 CONGRATULATIONS! You have completed the full TCI refresher course.")
-            st.session_state.module = 7
-            st.session_state.scroll_needed = True
-            st.rerun()
-        else:
-            st.error("Incorrect. These are life-saving protocols. Please review.")
-
+# ==========================================
+# MODULE 7: FINAL EXAM
+# ==========================================
 elif st.session_state.module == 7:
-    st.header("🎓 Course Complete")
-    st.success("You have successfully reviewed all 6 modules of the Therapeutic Crisis Intervention system.")
-    st.write("Remember: **Support** first, **Teach** second.")
+    st.header("📝 Final Certification Exam")
+    st.write("Answer all 20 questions. Passing score: 80% (16/20).")
+    
+    with st.form("exam_form"):
+        # QUESTIONS LIST
+        q1 = st.radio("1. What is the primary goal of the TCI system?", 
+             ["To enforce strict discipline", "To reduce the need for high-risk interventions", "To eliminate all emotions"])
+        
+        q2 = st.radio("2. A child's aggression or withdrawal is often an expression of:", 
+             ["Willful bad behavior", "Pain or trauma (Pain-Based Behavior)", "Laziness"])
+        
+        q3 = st.radio("3. Which part of the brain controls 'Fight, Flight, or Freeze'?", 
+             ["The Thinking Brain (Neocortex)", "The Emotional Brain (Limbic)", "The Survival Brain (Brain Stem)"])
+        
+        q4 = st.radio("4. Anything that makes challenging behavior more or less likely to occur is called a:", 
+             ["Setting Condition", "Trigger", "Crisis"])
+        
+        q5 = st.radio("5. In the Stress Model of Crisis, which phase is the peak of violence?", 
+             ["Escalation", "Outburst", "Recovery"])
+        
+        q6 = st.radio("6. What are the two goals of crisis intervention?", 
+             ["Control & Punish", "Support & Teach", "Restrain & Isolate"])
+        
+        q7 = st.radio("7. What is the FIRST question you ask yourself in a crisis?", 
+             ["What did the child do?", "What am I feeling now?", "Who started it?"])
+        
+        q8 = st.radio("8. Which is a nonverbal Active Listening technique?", 
+             ["Asking 'Why?'", "Silence", "Lecturing"])
+        
+        q9 = st.radio("9. Helping a child with the first few steps of a difficult task is called:", 
+             ["Prompting", "Hurdle Help", "Redirection"])
+        
+        q10 = st.radio("10. When a power struggle begins, what is the best strategy?", 
+             ["Win the argument", "Drop the rope", "Threaten consequences"])
+        
+        q11 = st.radio("11. During an outburst, how should you handle eye contact?", 
+             ["Stare them down", "Avoid it completely", "Use intermittent, non-threatening eye contact"])
+        
+        q12 = st.radio("12. Which of the following is an element of a violent situation?", 
+             ["The Spark", "The Target", "The Weapon", "All of the above"])
+        
+        q13 = st.radio("13. What is the first step of Crisis Co-Regulation?", 
+             ["Step back", "Take a deep breath", "Give a command"])
+        
+        q14 = st.radio("14. What does the 'C' in I ESCAPE stand for?", 
+             ["Control the child", "Connect trigger to feelings/behavior", "Call for help"])
+        
+        q15 = st.radio("15. What is a primary goal of the Life Space Interview (LSI)?", 
+             ["To return the child to normal functioning and teach new skills", "To make the child apologize", "To document the incident"])
+        
+        q16 = st.radio("16. Physical restraint should ONLY be used when:", 
+             ["The child is being disrespectful", "There is imminent risk of physical harm", "The child refuses to follow directions"])
+        
+        q17 = st.radio("17. What is Positional Asphyxia?", 
+             ["A panic attack", "Fatal respiratory arrest caused by body position", "Hyperventilation"])
+        
+        q18 = st.radio("18. You must NEVER put weight on a child's:", 
+             ["Arms", "Legs", "Chest, back, or stomach"])
+        
+        q19 = st.radio("19. If a child says 'I can't breathe' during a restraint, you must:", 
+             ["Tell them to calm down", "Ignore it if they are talking", "Release or adjust immediately"])
+        
+        q20 = st.radio("20. A restraint must end when:", 
+             ["The child is no longer a danger", "The child promises to be good", "15 minutes have passed"])
+
+        submitted = st.form_submit_button("Submit Exam")
+        
+        if submitted:
+            score = 0
+            if q1 == "To reduce the need for high-risk interventions": score += 1
+            if q2 == "Pain or trauma (Pain-Based Behavior)": score += 1
+            if q3 == "The Survival Brain (Brain Stem)": score += 1
+            if q4 == "Setting Condition": score += 1
+            if q5 == "Outburst": score += 1
+            if q6 == "Support & Teach": score += 1
+            if q7 == "What am I feeling now?": score += 1
+            if q8 == "Silence": score += 1
+            if q9 == "Hurdle Help": score += 1
+            if q10 == "Drop the rope": score += 1
+            if q11 == "Use intermittent, non-threatening eye contact": score += 1
+            if q12 == "All of the above": score += 1
+            if q13 == "Take a deep breath": score += 1
+            if q14 == "Connect trigger to feelings/behavior": score += 1
+            if q15 == "To return the child to normal functioning and teach new skills": score += 1
+            if q16 == "There is imminent risk of physical harm": score += 1
+            if q17 == "Fatal respiratory arrest caused by body position": score += 1
+            if q18 == "Chest, back, or stomach": score += 1
+            if q19 == "Release or adjust immediately": score += 1
+            if q20 == "The child is no longer a danger": score += 1
+            
+            st.session_state.final_score = score
+            if score >= 16:
+                st.session_state.module = 8
+                st.session_state.scroll_needed = True
+                st.rerun()
+            else:
+                st.error(f"You scored {score}/20 ({(score/20)*100}%). You need 80% to pass. Please review the materials and try again.")
+
+# ==========================================
+# MODULE 8: COMPLETION
+# ==========================================
+elif st.session_state.module == 8:
+    st.header("🎓 Certificate of Completion")
+    st.balloons()
+    st.success(f"CONGRATULATIONS! You passed the TCI Final Exam with a score of {st.session_state.final_score}/20.")
+    
+    st.markdown("""
+    ### You are now trained in:
+    * ✅ Crisis Prevention & The Therapeutic Milieu
+    * ✅ The Stress Model of Crisis
+    * ✅ De-Escalation Strategies
+    * ✅ Managing Violence & Outbursts
+    * ✅ The Life Space Interview (LSI)
+    * ✅ Safety Interventions & Risks
+    """)
+    
+    st.info("Please take a screenshot of this page for your supervisor.")
+    
     if st.button("Restart Training"):
         st.session_state.module = 1
         st.session_state.scroll_needed = True
