@@ -41,7 +41,6 @@ def get_ai_feedback(user_response, scenario_context, correct_concept):
     if not api_key:
         return "⚠️ AI features disabled."
     try:
-        # Using gemini-2.0-flash based on your access
         model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""
         You are an expert TCI instructor.
@@ -79,14 +78,16 @@ with st.sidebar:
     st.subheader("💬 AI Tutor Chat")
     with st.expander("Have a question?", expanded=False):
         st.write("Ask anything about TCI definitions, concepts, or rules.")
-        user_q = st.text_input("Type your question here:", key="sidebar_q")
-        if st.button("Ask AI"):
-            if user_q:
-                with st.spinner("Thinking..."):
-                    answer = ask_tci_bot(user_q)
-                    st.info(f"**Answer:** {answer}")
-            else:
-                st.warning("Please type a question.")
+        
+        # Form allows 'Enter' key submission
+        with st.form(key="sidebar_qa_form"):
+            user_q = st.text_input("Type question & hit Enter:")
+            submit_q = st.form_submit_button("Ask AI")
+            
+        if submit_q and user_q:
+            with st.spinner("Thinking..."):
+                answer = ask_tci_bot(user_q)
+                st.info(f"**Answer:** {answer}")
     st.divider()
 
 # --- MAIN APP ---
@@ -122,10 +123,17 @@ if st.session_state.module == 1:
 
     st.subheader("🧠 AI Scenario Practice")
     st.write("**Scenario:** Marcus (10yo) flips a chair because he has to stop playing. He screams 'I hate you!' and curls into a ball.")
-    ans1 = st.text_area("Using the Triune Brain model, is he being 'bad'? What is happening?", height=100)
-    if st.button("Get AI Feedback"):
-        with st.spinner("Checking..."):
-            st.success(get_ai_feedback(ans1, "Child flips chair/curls in ball.", "Survival Brain (Fight/Flight/Freeze) & Pain-Based Behavior"))
+    
+    with st.form(key="mod1_form"):
+        ans1 = st.text_area("Using the Triune Brain model, is he being 'bad'? What is happening?", height=100)
+        submit1 = st.form_submit_button("Get AI Feedback")
+    
+    if submit1:
+        if ans1:
+            with st.spinner("Checking..."):
+                st.success(get_ai_feedback(ans1, "Child flips chair/curls in ball.", "Survival Brain (Fight/Flight/Freeze) & Pain-Based Behavior"))
+        else:
+            st.warning("Please type an answer first.")
 
     st.divider()
 
@@ -164,10 +172,17 @@ elif st.session_state.module == 2:
 
     st.subheader("🧠 AI Scenario Practice")
     st.write("**Scenario:** Sarah fails a test. She slams her book and paces (Escalation). She has NOT hit anyone.")
-    ans2 = st.text_area("According to the 'Two Goals', what is your job right now?", height=100)
-    if st.button("Get AI Feedback"):
-        with st.spinner("Checking..."):
-            st.success(get_ai_feedback(ans2, "Child escalating but not violent.", "Support: Reduce stress/risk. Teaching happens later."))
+    
+    with st.form(key="mod2_form"):
+        ans2 = st.text_area("According to the 'Two Goals', what is your job right now?", height=100)
+        submit2 = st.form_submit_button("Get AI Feedback")
+        
+    if submit2:
+        if ans2:
+            with st.spinner("Checking..."):
+                st.success(get_ai_feedback(ans2, "Child escalating but not violent.", "Support: Reduce stress/risk. Teaching happens later."))
+        else:
+            st.warning("Please type an answer first.")
 
     st.divider()
 
@@ -205,10 +220,17 @@ elif st.session_state.module == 3:
 
     st.subheader("🧠 AI Scenario Practice")
     st.write("**Scenario:** You tell Jason to clean his room. He yells 'Make me!' You feel angry.")
-    ans3 = st.text_area("How do you 'Drop the Rope'?", height=100)
-    if st.button("Get AI Feedback"):
-        with st.spinner("Checking..."):
-            st.success(get_ai_feedback(ans3, "Child challenges authority.", "Drop the rope. Validate feelings, give choices, step back."))
+    
+    with st.form(key="mod3_form"):
+        ans3 = st.text_area("How do you 'Drop the Rope'?", height=100)
+        submit3 = st.form_submit_button("Get AI Feedback")
+    
+    if submit3:
+        if ans3:
+            with st.spinner("Checking..."):
+                st.success(get_ai_feedback(ans3, "Child challenges authority.", "Drop the rope. Validate feelings, give choices, step back."))
+        else:
+            st.warning("Please type an answer first.")
 
     st.divider()
 
@@ -242,10 +264,17 @@ elif st.session_state.module == 4:
 
     st.subheader("🧠 AI Scenario Practice")
     st.write("**Scenario:** The child is screaming and looking for a weapon. You are the target.")
-    ans4 = st.text_area("Describe your body language and action.", height=100)
-    if st.button("Get AI Feedback"):
-        with st.spinner("Checking..."):
-            st.success(get_ai_feedback(ans4, "Child in outburst, user is target.", "Remove the target (step away). Open stance. Hands visible."))
+    
+    with st.form(key="mod4_form"):
+        ans4 = st.text_area("Describe your body language and action.", height=100)
+        submit4 = st.form_submit_button("Get AI Feedback")
+    
+    if submit4:
+        if ans4:
+            with st.spinner("Checking..."):
+                st.success(get_ai_feedback(ans4, "Child in outburst, user is target.", "Remove the target (step away). Open stance. Hands visible."))
+        else:
+            st.warning("Please type an answer first.")
 
     st.divider()
 
@@ -278,10 +307,17 @@ elif st.session_state.module == 5:
 
     st.subheader("🧠 AI Scenario Practice")
     st.write("**Scenario:** The child is calm. You are doing the LSI. You just Summarized. What comes next?")
-    ans5 = st.text_area("What is the 'C' step and what does it mean?", height=100)
-    if st.button("Get AI Feedback"):
-        with st.spinner("Checking..."):
-            st.success(get_ai_feedback(ans5, "LSI step C.", "Connect. Connect trigger -> feeling -> behavior."))
+    
+    with st.form(key="mod5_form"):
+        ans5 = st.text_area("What is the 'C' step and what does it mean?", height=100)
+        submit5 = st.form_submit_button("Get AI Feedback")
+    
+    if submit5:
+        if ans5:
+            with st.spinner("Checking..."):
+                st.success(get_ai_feedback(ans5, "LSI step C.", "Connect. Connect trigger -> feeling -> behavior."))
+        else:
+            st.warning("Please type an answer first.")
 
     st.divider()
 
@@ -316,10 +352,17 @@ elif st.session_state.module == 6:
 
     st.subheader("🧠 AI Scenario Practice")
     st.write("**Scenario:** You are restraining a child. He says 'I can't breathe.' You think he is lying.")
-    ans6 = st.text_area("What is the ONLY acceptable response?", height=100)
-    if st.button("Get AI Feedback"):
-        with st.spinner("Checking..."):
-            st.success(get_ai_feedback(ans6, "Child says 'I can't breathe'.", "Release immediately or adjust position. Never ignore."))
+    
+    with st.form(key="mod6_form"):
+        ans6 = st.text_area("What is the ONLY acceptable response?", height=100)
+        submit6 = st.form_submit_button("Get AI Feedback")
+    
+    if submit6:
+        if ans6:
+            with st.spinner("Checking..."):
+                st.success(get_ai_feedback(ans6, "Child says 'I can't breathe'.", "Release immediately or adjust position. Never ignore."))
+        else:
+            st.warning("Please type an answer first.")
 
     st.divider()
 
