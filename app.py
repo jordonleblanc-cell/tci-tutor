@@ -36,11 +36,12 @@ else:
 if "module" not in st.session_state:
     st.session_state.module = 1
 
-# --- AI FEEDBACK FUNCTION ---
+# --- AI FEEDBACK FUNCTION (SCENARIOS) ---
 def get_ai_feedback(user_response, scenario_context, correct_concept):
     if not api_key:
         return "⚠️ AI features disabled."
     try:
+        # Using gemini-2.0-flash based on your access
         model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""
         You are an expert TCI instructor.
@@ -54,18 +55,22 @@ def get_ai_feedback(user_response, scenario_context, correct_concept):
     except Exception as e:
         return f"Error: {e}"
 
+# --- AI TUTOR CHAT FUNCTION (SIDEBAR) ---
 def ask_tci_bot(question):
     """General Q&A logic for the sidebar bot."""
     if not api_key: return "⚠️ Please enter an API Key."
     try:
         model = genai.GenerativeModel("gemini-2.0-flash")
+        # UPDATED PROMPT FOR MORE DETAIL
         prompt = f"""
-        You are a helpful TCI (Therapeutic Crisis Intervention) Tutor.
-        The user has a question about the material.
-        User Question: "{question}"
+        You are an expert, patient TCI (Therapeutic Crisis Intervention) Tutor.
+        The user has a specific question about the material: "{question}"
         
-        Task: Answer clearly and accurately based STRICTLY on TCI guidelines (Trauma-informed care, Stress Model, LSI, Safety). 
-        Keep it concise (under 3-4 sentences).
+        Task: Provide a detailed, comprehensive answer based STRICTLY on TCI principles.
+        1. Define the concept clearly.
+        2. Explain the 'Why': How does this help a traumatized child?
+        3. Provide a practical example of how this looks in action.
+        4. Structure your answer with bullet points or bold text for readability.
         """
         response = model.generate_content(prompt)
         return response.text
@@ -77,7 +82,7 @@ with st.sidebar:
     st.divider()
     st.subheader("💬 AI Tutor Chat")
     with st.expander("Have a question?", expanded=False):
-        st.write("Ask anything about TCI definitions, concepts, or rules.")
+        st.write("Ask detailed questions about TCI concepts.")
         
         # Form allows 'Enter' key submission
         with st.form(key="sidebar_qa_form"):
@@ -87,7 +92,7 @@ with st.sidebar:
         if submit_q and user_q:
             with st.spinner("Thinking..."):
                 answer = ask_tci_bot(user_q)
-                st.info(f"**Answer:** {answer}")
+                st.markdown(f"**Answer:**\n\n{answer}")
     st.divider()
 
 # --- MAIN APP ---
