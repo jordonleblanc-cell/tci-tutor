@@ -41,6 +41,7 @@ def get_ai_feedback(user_response, scenario_context, correct_concept):
     if not api_key:
         return "⚠️ AI features disabled."
     try:
+        # Using gemini-2.0-flash based on your access
         model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""
         You are an expert TCI instructor.
@@ -75,9 +76,26 @@ def ask_tci_bot(question):
     except Exception as e:
         return f"Error: {e}"
 
-# --- SIDEBAR: AI TUTOR CHAT ---
+# --- SIDEBAR: NAVIGATION & CHAT ---
 with st.sidebar:
+    st.header("📍 Menu")
+    
+    # Quick Navigation Buttons
+    col_nav1, col_nav2 = st.columns(2)
+    with col_nav1:
+        if st.button("🏠 Start"):
+            st.session_state.module = 1
+            st.session_state.scroll_needed = True
+            st.rerun()
+    with col_nav2:
+        if st.button("📚 Study Guide"):
+            st.session_state.module = 7
+            st.session_state.scroll_needed = True
+            st.rerun()
+            
     st.divider()
+    
+    # AI Chat
     st.subheader("💬 AI Tutor Chat")
     with st.expander("Have a question?", expanded=False):
         st.write("Ask anything about TCI definitions, concepts, or rules.")
