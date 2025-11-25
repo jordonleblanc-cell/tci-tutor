@@ -36,12 +36,11 @@ else:
 if "module" not in st.session_state:
     st.session_state.module = 1
 
-# --- AI FEEDBACK FUNCTION (SCENARIOS) ---
+# --- AI FEEDBACK FUNCTION ---
 def get_ai_feedback(user_response, scenario_context, correct_concept):
     if not api_key:
         return "⚠️ AI features disabled."
     try:
-        # Using gemini-2.0-flash based on your access
         model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""
         You are an expert TCI instructor.
@@ -55,16 +54,15 @@ def get_ai_feedback(user_response, scenario_context, correct_concept):
     except Exception as e:
         return f"Error: {e}"
 
-# --- AI TUTOR CHAT FUNCTION (SIDEBAR) ---
 def ask_tci_bot(question):
     """General Q&A logic for the sidebar bot."""
     if not api_key: return "⚠️ Please enter an API Key."
     try:
         model = genai.GenerativeModel("gemini-2.0-flash")
-        # UPDATED PROMPT FOR MORE DETAIL
         prompt = f"""
-        You are an expert, patient TCI (Therapeutic Crisis Intervention) Tutor.
-        The user has a specific question about the material: "{question}"
+        You are a helpful TCI (Therapeutic Crisis Intervention) Tutor.
+        The user has a question about the material.
+        User Question: "{question}"
         
         Task: Provide a detailed, comprehensive answer based STRICTLY on TCI principles.
         1. Define the concept clearly.
@@ -82,9 +80,8 @@ with st.sidebar:
     st.divider()
     st.subheader("💬 AI Tutor Chat")
     with st.expander("Have a question?", expanded=False):
-        st.write("Ask detailed questions about TCI concepts.")
+        st.write("Ask anything about TCI definitions, concepts, or rules.")
         
-        # Form allows 'Enter' key submission
         with st.form(key="sidebar_qa_form"):
             user_q = st.text_input("Type question & hit Enter:")
             submit_q = st.form_submit_button("Ask AI")
@@ -97,7 +94,7 @@ with st.sidebar:
 
 # --- MAIN APP ---
 st.title("🛡️ Therapeutic Crisis Intervention (TCI) Tutor")
-st.progress(st.session_state.module / 8)
+st.progress(st.session_state.module / 9)
 
 # ==========================================
 # MODULE 1: CRISIS PREVENTION
@@ -371,15 +368,102 @@ elif st.session_state.module == 6:
 
     st.divider()
 
-    if st.button("Start Final Exam 👉"):
+    if st.button("Continue to Study Guide 👉"):
         st.session_state.module = 7
         st.session_state.scroll_needed = True
         st.rerun()
 
 # ==========================================
-# MODULE 7: FINAL EXAM
+# MODULE 7: COMPREHENSIVE STUDY GUIDE
 # ==========================================
 elif st.session_state.module == 7:
+    st.header("📚 TCI Comprehensive Study Guide")
+    st.markdown("Review these concepts carefully before starting the Final Exam.")
+
+    tab1, tab2, tab3, tab4 = st.tabs(["1. Prevention & Brain", "2. De-Escalation", "3. Crisis & Safety", "4. Recovery (LSI)"])
+
+    with tab1:
+        st.subheader("Crisis Prevention")
+        st.markdown("""
+        * **Goal of TCI:** Reduce need for high-risk interventions (restraints) and teach coping skills.
+        * **Pain-Based Behavior:** Aggression, withdrawal, and defiance are expressions of pain/trauma.
+        * **Trauma's Impact:** Children with trauma histories often have over-reactive survival brains.
+        
+        **The Triune Brain:**
+        1. **Thinking Brain (Neocortex):** Reasoning, language. Offline during stress.
+        2. **Emotional Brain (Limbic/Amygdala):** Emotions, danger detection. "The Sentry."
+        3. **Survival Brain (Brain Stem):** Fight, Flight, or Freeze.
+        
+        **The 5 Spaces of the Milieu:**
+        * **Ideological:** Values, philosophy.
+        * **Physical:** Environment, noise, safety.
+        * **Cultural:** Acceptance of identity.
+        * **Social:** Relationships, routines.
+        * **Emotional:** Safety, emotional competence.
+        """)
+
+    with tab2:
+        st.subheader("De-Escalation Strategies")
+        st.markdown("""
+        **Behavior Support Techniques (To support, not punish):**
+        * Prompting
+        * Caring Gesture
+        * Hurdle Help
+        * Redirection / Distraction
+        * Proximity
+        * Directive Statements
+        * Time Away
+        
+        **Avoiding Power Struggles:**
+        * Occur when staff enters a "tug of war."
+        * **Solution:** Drop the Rope. Listen, validate feelings, give choices, manage the environment.
+        """)
+
+    with tab3:
+        st.subheader("Managing Crisis & Safety")
+        st.markdown("""
+        **The Stress Model of Crisis:**
+        * Baseline -> Trigger -> Escalation -> Outburst -> Recovery.
+        * **Peak violence:** Outburst phase.
+        
+        **Crisis Co-Regulation (What to do in an outburst):**
+        * **Think:** Ask the 4 Questions (Feeling? Need? Environment? Response?).
+        * **Do:** Deep breath, step back, neutral stance.
+        * **Say:** Very little.
+        
+        **Safety Interventions (Restraints):**
+        * **Definition:** Restricting movement. High-risk.
+        * **Criteria:** ONLY for imminent risk of physical harm to self or others.
+        * **Positional Asphyxia:** Fatal inability to breathe due to body position.
+        * **Safety Rules:** Never put weight on chest/back. Never ignore "I can't breathe." Monitor skin/breathing constantly.
+        """)
+
+    with tab4:
+        st.subheader("Recovery & LSI")
+        st.markdown("""
+        **The Life Space Interview (LSI):**
+        * A therapeutic conversation after the crisis to teach new skills.
+        
+        **I ESCAPE Steps:**
+        * **I** - Identify time/place.
+        * **E** - Explore child's view.
+        * **S** - Summarize feelings/content.
+        * **C** - Connect trigger to behavior.
+        * **A** - Alternative responses.
+        * **P** - Plan/Practice.
+        * **E** - Enter back to routine.
+        """)
+
+    st.divider()
+    if st.button("Ready for Final Exam 👉"):
+        st.session_state.module = 8
+        st.session_state.scroll_needed = True
+        st.rerun()
+
+# ==========================================
+# MODULE 8: FINAL EXAM
+# ==========================================
+elif st.session_state.module == 8:
     st.header("📝 Final Certification Exam")
     st.write("Answer all 20 questions. Passing score: 80% (16/20).")
     
@@ -472,16 +556,16 @@ elif st.session_state.module == 7:
             
             st.session_state.final_score = score
             if score >= 16:
-                st.session_state.module = 8
+                st.session_state.module = 9
                 st.session_state.scroll_needed = True
                 st.rerun()
             else:
-                st.error(f"You scored {score}/20 ({(score/20)*100}%). You need 80% to pass. Please review the materials and try again.")
+                st.error(f"You scored {score}/20 ({(score/20)*100}%). You need 80% to pass. Please review the Study Guide and try again.")
 
 # ==========================================
-# MODULE 8: COMPLETION
+# MODULE 9: COMPLETION
 # ==========================================
-elif st.session_state.module == 8:
+elif st.session_state.module == 9:
     st.header("🎓 Certificate of Completion")
     st.balloons()
     st.success(f"CONGRATULATIONS! You passed the TCI Final Exam with a score of {st.session_state.final_score}/20.")
