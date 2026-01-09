@@ -488,39 +488,237 @@ elif st.session_state.module == "Dojo":
 # ==========================================
 elif st.session_state.module == "Exam":
     st.markdown("<div class='main-header'>📝 Final Certification Exam</div>", unsafe_allow_html=True)
+    st.write("Answer all 50 questions. Passing score: 80% (40/50).")
+
+    # List of 50 Questions
+    exam_questions = [
+        {"q": "1. What is the primary goal of the TCI system?", 
+         "options": ["To enforce strict discipline", "To reduce high-risk interventions and teach coping skills", "To eliminate all emotions"], 
+         "correct": "To reduce high-risk interventions and teach coping skills"},
+        
+        {"q": "2. Anything that makes challenging behavior more or less likely to occur is called a:", 
+         "options": ["Trigger", "Setting Condition", "Crisis"], 
+         "correct": "Setting Condition"},
+        
+        {"q": "3. Aggression, withdrawal, and defiance are often expressions of:", 
+         "options": ["Bad character", "Pain or trauma (Pain-Based Behavior)", "Lack of intelligence"], 
+         "correct": "Pain or trauma (Pain-Based Behavior)"},
+        
+        {"q": "4. Which part of the Triune Brain is responsible for reasoning and language?", 
+         "options": ["Survival Brain", "Emotional Brain", "Thinking Brain (Neocortex)"], 
+         "correct": "Thinking Brain (Neocortex)"},
+        
+        {"q": "5. During a crisis, the Thinking Brain is usually:", 
+         "options": ["Fully functional", "Offline", "In charge"], 
+         "correct": "Offline"},
+        
+        {"q": "6. Which part of the brain is the 'Sentry' that scans for danger?", 
+         "options": ["Amygdala (Emotional Brain)", "Prefrontal Cortex", "Brain Stem"], 
+         "correct": "Amygdala (Emotional Brain)"},
+        
+        {"q": "7. Which part of the brain controls Fight, Flight, or Freeze?", 
+         "options": ["Thinking Brain", "Survival Brain (Brain Stem)", "Emotional Brain"], 
+         "correct": "Survival Brain (Brain Stem)"},
+        
+        {"q": "8. The 5 spaces of the Therapeutic Milieu are: Ideological, Physical, Cultural, Social, and...", 
+         "options": ["Financial", "Emotional", "Educational"], 
+         "correct": "Emotional"},
+        
+        {"q": "9. Which TCI Domain involves the philosophy that learning is more important than control?", 
+         "options": ["Leadership & Program Support", "Documentation", "Clinical Participation"], 
+         "correct": "Leadership & Program Support"},
+        
+        {"q": "10. In the Stress Model of Crisis, what follows the 'Triggering Event'?", 
+         "options": ["Recovery", "Escalation", "Outburst"], 
+         "correct": "Escalation"},
+        
+        {"q": "11. At which stage of the Stress Model should staff intervene to prevent violence?", 
+         "options": ["Outburst", "Escalation", "Recovery"], 
+         "correct": "Escalation"},
+        
+        {"q": "12. What is the first of the 'Four Questions' you ask yourself in a crisis?", 
+         "options": ["What did the child do?", "What am I feeling now?", "How do I stop this?"], 
+         "correct": "What am I feeling now?"},
+        
+        {"q": "13. What is the second of the 'Four Questions'?", 
+         "options": ["What does the child feel, need, or want?", "Is anyone watching?", "Who started it?"], 
+         "correct": "What does the child feel, need, or want?"},
+        
+        {"q": "14. Nonverbal active listening includes:", 
+         "options": ["Lecturing", "Silence, nods, and facial expression", "Asking 'Why?'"], 
+         "correct": "Silence, nods, and facial expression"},
+        
+        {"q": "15. 'Hurdle Help' is defined as:", 
+         "options": ["Doing the work for the child", "Assisting with the first few steps of a frustrating task", "ignoring the child"], 
+         "correct": "Assisting with the first few steps of a frustrating task"},
+        
+        {"q": "16. 'Prompting' is:", 
+         "options": ["A gentle signal (gesture/words) to remind a child of expectations", "Ordering a child to stop", "Threatening consequences"], 
+         "correct": "A gentle signal (gesture/words) to remind a child of expectations"},
+        
+        {"q": "17. 'Proximity' as a support technique means:", 
+         "options": ["Moving far away", "Moving closer to provide support/safety", "Touching the child"], 
+         "correct": "Moving closer to provide support/safety"},
+        
+        {"q": "18. 'Redirection' involves:", 
+         "options": ["Shifting focus to a neutral/positive activity", "Punishing the behavior", "Analyzing the behavior"], 
+         "correct": "Shifting focus to a neutral/positive activity"},
+        
+        {"q": "19. A 'Caring Gesture' is:", 
+         "options": ["A bribe", "A brief act/word to build connection and reduce stress", "A reward for good behavior"], 
+         "correct": "A brief act/word to build connection and reduce stress"},
+        
+        {"q": "20. When a power struggle begins, the best strategy is to:", 
+         "options": ["Win the argument", "Drop the rope", "Assert authority loudly"], 
+         "correct": "Drop the rope"},
+        
+        {"q": "21. During an outburst, your eye contact should be:", 
+         "options": ["Staring intensely", "Intermittent and non-threatening", "Completely avoided"], 
+         "correct": "Intermittent and non-threatening"},
+        
+        {"q": "22. The four elements of a potentially violent situation are: Spark, Target, Weapon, and...", 
+         "options": ["Motivation/Stress", "Opportunity", "Location"], 
+         "correct": "Motivation/Stress"},
+        
+        {"q": "23. To stop violence, you must remove:", 
+         "options": ["All four elements", "At least one element", "Only the weapon"], 
+         "correct": "At least one element"},
+        
+        {"q": "24. In Crisis Co-Regulation, the 'Think' step involves:", 
+         "options": ["Planning punishment", "Asking the 4 Questions", "Calling the police"], 
+         "correct": "Asking the 4 Questions"},
+        
+        {"q": "25. In Crisis Co-Regulation, the 'Do' step involves:", 
+         "options": ["Deep breath, step back, neutral stance", "Grabbing the child", "Yelling 'Stop!'"], 
+         "correct": "Deep breath, step back, neutral stance"},
+        
+        {"q": "26. The goal of the LSI (Life Space Interview) is to:", 
+         "options": ["Punish the child", "Return to normal and teach new skills", "Document the incident"], 
+         "correct": "Return to normal and teach new skills"},
+        
+        {"q": "27. In the acronym I ESCAPE, 'I' stands for:", 
+         "options": ["Ignore", "Isolate the conversation", "Investigate"], 
+         "correct": "Isolate the conversation"},
+        
+        {"q": "28. In I ESCAPE, the first 'E' stands for:", 
+         "options": ["Explore the child's point of view", "Enter the room", "Evaluate the risk"], 
+         "correct": "Explore the child's point of view"},
+        
+        {"q": "29. In I ESCAPE, 'S' stands for:", 
+         "options": ["Silence", "Summarize feelings and content", "Stop talking"], 
+         "correct": "Summarize feelings and content"},
+        
+        {"q": "30. In I ESCAPE, 'C' stands for:", 
+         "options": ["Control the child", "Connect trigger to behavior", "Correct the behavior"], 
+         "correct": "Connect trigger to behavior"},
+        
+        {"q": "31. In I ESCAPE, 'A' stands for:", 
+         "options": ["Alternative responses", "Ask for help", "Argue"], 
+         "correct": "Alternative responses"},
+        
+        {"q": "32. In I ESCAPE, 'P' stands for:", 
+         "options": ["Plan/Practice", "Punish", "Promise"], 
+         "correct": "Plan/Practice"},
+        
+        {"q": "33. In I ESCAPE, the last 'E' stands for:", 
+         "options": ["End the shift", "Enter back into the routine", "Escalate"], 
+         "correct": "Enter back into the routine"},
+        
+        {"q": "34. Physical restraint should ONLY be used when:", 
+         "options": ["The child is disrespectful", "There is imminent risk of physical harm", "The child refuses to move"], 
+         "correct": "There is imminent risk of physical harm"},
+        
+        {"q": "35. Restraint should NEVER be used for:", 
+         "options": ["Safety", "Compliance or discipline", "Self-defense"], 
+         "correct": "Compliance or discipline"},
+        
+        {"q": "36. Positional Asphyxia is:", 
+         "options": ["A panic attack", "Fatal respiratory arrest due to body position", "A minor injury"], 
+         "correct": "Fatal respiratory arrest due to body position"},
+        
+        {"q": "37. You should NEVER put weight on a child's:", 
+         "options": ["Arms", "Chest, back, or stomach", "Legs"], 
+         "correct": "Chest, back, or stomach"},
+        
+        {"q": "38. If a child says 'I can't breathe' during a restraint, you must:", 
+         "options": ["Ignore it if they are talking", "Release or adjust immediately", "Wait 5 minutes"], 
+         "correct": "Release or adjust immediately"},
+        
+        {"q": "39. During a restraint, you must monitor:", 
+         "options": ["Skin color and respiration", "The time only", "The other children"], 
+         "correct": "Skin color and respiration"},
+        
+        {"q": "40. A 'Setting Condition' in the Ideological space would be:", 
+         "options": ["A cluttered room", "A culture of learning vs. control", "A hungry child"], 
+         "correct": "A culture of learning vs. control"},
+        
+        {"q": "41. Which is an example of an Emotional Space setting condition?", 
+         "options": ["Personal belongings", "Sense of safety/trust", "Lighting"], 
+         "correct": "Sense of safety/trust"},
+        
+        {"q": "42. 'Reflective Practice' means:", 
+         "options": ["Mirroring the child", "Thinking about one's actions to improve learning", "Ignoring mistakes"], 
+         "correct": "Thinking about one's actions to improve learning"},
+        
+        {"q": "43. The 'Target' in a violent situation is usually:", 
+         "options": ["The weapon", "The staff member or another child", "The trigger"], 
+         "correct": "The staff member or another child"},
+        
+        {"q": "44. 'Drop the Rope' helps to avoid:", 
+         "options": ["Falling down", "Power Struggles", "Documentation"], 
+         "correct": "Power Struggles"},
+        
+        {"q": "45. When we validate a child's feelings, we are using:", 
+         "options": ["Active Listening", "Prompting", "Restraint"], 
+         "correct": "Active Listening"},
+        
+        {"q": "46. Emotional First Aid goals include: Provide support, Resolve immediate crisis, and...", 
+         "options": ["Keep the child in the activity", "Send the child to bed", "Isolate the child"], 
+         "correct": "Keep the child in the activity"},
+        
+        {"q": "47. The 'Conflict Cycle' describes how:", 
+         "options": ["Stress leads to feelings, behavior, and adult response", "Children fight each other", "Staff argue with supervisors"], 
+         "correct": "Stress leads to feelings, behavior, and adult response"},
+        
+        {"q": "48. Individual Crisis Support Plans (ICSP) should be reviewed:", 
+         "options": ["Never", "After every crisis or regularly", "Once a year only"], 
+         "correct": "After every crisis or regularly"},
+        
+        {"q": "49. Which statement is a 'Connect' statement in LSI?", 
+         "options": ["'You are grounded.'", "'When he took your toy, you felt mad, so you hit him.'", "'Don't do that again.'"], 
+         "correct": "'When he took your toy, you felt mad, so you hit him.'"},
+        
+        {"q": "50. A child in the 'Recovery' phase needs:", 
+         "options": ["Strict punishment", "The Life Space Interview (LSI)", "To be ignored"], 
+         "correct": "The Life Space Interview (LSI)"}
+    ]
     
-    questions = {
-        "1. What is the goal of crisis intervention?": ["Compliance", "Support & Teach", "Punishment"],
-        "2. Which brain is in charge during an outburst?": ["Thinking Brain", "Emotional Brain", "Survival Brain"],
-        "3. What is the first question you ask yourself?": ["What did he do?", "What am I feeling?", "Who is watching?"],
-        "4. In the Stress Model, where should you intervene?": ["Trigger", "Escalation", "Outburst"],
-        "5. 'Drop the Rope' is used for:": ["Safety", "Power Struggles", "Hygiene"],
-        "6. In 'I ESCAPE', what is 'C'?": ["Control", "Connect", "Contain"],
-        "7. Can you restrain a child for property destruction?": ["Yes", "No (Unless imminent safety risk)", "Only if expensive"],
-        "8. Positional Asphyxia affects:": ["Digestion", "Breathing/Respiration", "Movement"]
-    }
-    
-    correct_answers = ["Support & Teach", "Survival Brain", "What am I feeling?", "Escalation", "Power Struggles", "Connect", "No (Unless imminent safety risk)", "Breathing/Respiration"]
-    
-    with st.form("final_exam"):
-        answers = []
-        for q, opts in questions.items():
-            answers.append(st.radio(q, opts))
+    with st.form("final_exam_50"):
+        user_answers = []
+        for item in exam_questions:
+            # index=None ensures no answer is pre-selected
+            ans = st.radio(item["q"], item["options"], index=None, key=item["q"])
+            user_answers.append(ans)
             st.markdown("---")
             
         submit_exam = st.form_submit_button("Submit Final Exam")
         
         if submit_exam:
             score = 0
-            for i, ans in enumerate(answers):
-                if ans == correct_answers[i]:
+            unanswered = 0
+            for i, ans in enumerate(user_answers):
+                if ans is None:
+                    unanswered += 1
+                elif ans == exam_questions[i]["correct"]:
                     score += 1
             
             st.session_state.quiz_score = score
             
-            if score >= 7:
+            if unanswered > 0:
+                st.warning(f"⚠️ You left {unanswered} questions blank. Please answer all questions.")
+            elif score >= 40: # 80% of 50 is 40
                 st.balloons()
-                st.success(f"🎉 PASSED! Score: {score}/8")
+                st.success(f"🎉 PASSED! Score: {score}/50 ({(score/50)*100}%)")
                 st.markdown("""
                 <div class='success-box'>
                 <b>CERTIFICATE OF COMPLETION</b><br>
@@ -528,4 +726,4 @@ elif st.session_state.module == "Exam":
                 </div>
                 """, unsafe_allow_html=True)
             else:
-                st.error(f"Score: {score}/8. You need 7 to pass. Please review the modules.")
+                st.error(f"Score: {score}/50 ({(score/50)*100}%). You need 40 to pass. Please review the modules.")
