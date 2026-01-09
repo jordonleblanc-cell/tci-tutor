@@ -82,7 +82,39 @@ else:
 if api_key:
     genai.configure(api_key=api_key)
 
+# --- NAVIGATION CONSTANTS ---
+nav_options = {
+    "Home": "🏠 Dashboard",
+    "Mod1": "🧠 1. Prevention & Domains",
+    "Mod2": "📈 2. Stress Model & Curve",
+    "Mod3": "🛑 3. De-Escalation Tools",
+    "Mod4": "🔥 4. The Outburst",
+    "Mod5": "🌱 5. Recovery (LSI)",
+    "Dojo": "🥋 AI Roleplay Dojo",
+    "Exam": "📝 Final Exam"
+}
+nav_keys = list(nav_options.keys())
+
 # --- HELPER FUNCTIONS ---
+
+def render_navigation_footer():
+    """Renders Previous/Next buttons at the bottom of pages."""
+    st.markdown("---")
+    col_prev, col_spacer, col_next = st.columns([1, 4, 1])
+    
+    current_idx = nav_keys.index(st.session_state.module)
+    
+    with col_prev:
+        if current_idx > 0:
+            if st.button("⬅️ Previous Module", key="prev_btn"):
+                st.session_state.module = nav_keys[current_idx - 1]
+                st.rerun()
+    
+    with col_next:
+        if current_idx < len(nav_keys) - 1:
+            if st.button("Next Module ➡️", key="next_btn"):
+                st.session_state.module = nav_keys[current_idx + 1]
+                st.rerun()
 
 def draw_stress_model():
     """Generates the TCI Stress Model Curve visual."""
@@ -172,21 +204,28 @@ def run_roleplay(user_input, scenario):
     except Exception as e:
         return "Error in simulation."
 
-# --- NAVIGATION ---
+# --- NAVIGATION SIDEBAR ---
 st.sidebar.title("📍 TCI Navigator")
-nav_options = {
-    "Home": "🏠 Dashboard",
-    "Mod1": "🧠 1. Prevention & Domains",
-    "Mod2": "📈 2. Stress Model & Curve",
-    "Mod3": "🛑 3. De-Escalation Tools",
-    "Mod4": "🔥 4. The Outburst",
-    "Mod5": "🌱 5. Recovery (LSI)",
-    "Dojo": "🥋 AI Roleplay Dojo",
-    "Exam": "📝 Final Exam"
-}
 
-selection = st.sidebar.radio("Go to:", list(nav_options.keys()), format_func=lambda x: nav_options[x])
-st.session_state.module = selection
+# Logic to sync sidebar with session state
+if st.session_state.module not in nav_keys:
+    st.session_state.module = "Home"
+
+current_idx = nav_keys.index(st.session_state.module)
+
+# The sidebar radio button
+selected_nav = st.sidebar.radio(
+    "Go to:", 
+    nav_keys, 
+    index=current_idx,
+    format_func=lambda x: nav_options[x],
+    key="nav_radio"
+)
+
+# If the user clicked the radio button, update state and rerun
+if selected_nav != st.session_state.module:
+    st.session_state.module = selected_nav
+    st.rerun()
 
 st.sidebar.markdown("---")
 st.sidebar.metric("Progress", f"{len(st.session_state.roleplay_history)} Interactions", delta_color="off")
@@ -216,6 +255,8 @@ if st.session_state.module == "Home":
     with col2:
         st.image("https://cdn-icons-png.flaticon.com/512/2921/2921226.png", width=150)
         st.markdown("**Status:** In Training")
+
+    render_navigation_footer()
 
 # ==========================================
 # PAGE: MODULE 1 - PREVENTION
@@ -289,6 +330,8 @@ elif st.session_state.module == "Mod1":
     with col2:
         st.info("📝 **Pain-Based Behavior:**\n\nAggression, withdrawal, and defiance are often expressions of trauma and pain. \n\n**Setting Conditions:** Anything that makes these behaviors more or less likely to occur.")
 
+    render_navigation_footer()
+
 # ==========================================
 # PAGE: MODULE 2 - STRESS MODEL
 # ==========================================
@@ -314,6 +357,8 @@ elif st.session_state.module == "Mod2":
         st.error("🔴 **Phase:** Outburst (Violence)\n\n**Goal:** Safety.\n\n**Action:** Remove the audience, Remove the target, Physical safety.")
     elif phase == "Recovery":
         st.info("🔵 **Phase:** Recovery\n\n**Goal:** Teach.\n\n**Action:** Life Space Interview (LSI).")
+
+    render_navigation_footer()
 
 # ==========================================
 # PAGE: MODULE 3 - DE-ESCALATION
@@ -360,6 +405,8 @@ elif st.session_state.module == "Mod3":
     elif q3:
         st.error("Incorrect. Try again.")
 
+    render_navigation_footer()
+
 # ==========================================
 # PAGE: MODULE 4 - OUTBURST
 # ==========================================
@@ -394,6 +441,8 @@ elif st.session_state.module == "Mod4":
     cols[1].metric("The Target", "You/Other", delta="- Step Away")
     cols[2].metric("The Weapon", "Object", delta="- Remove it")
     cols[3].metric("Motivation", "Stress", delta="- Co-regulate")
+
+    render_navigation_footer()
 
 # ==========================================
 # PAGE: MODULE 5 - LSI
@@ -430,6 +479,8 @@ elif st.session_state.module == "Mod5":
     if st.button("Check My Answer"):
         feedback = get_ai_tutor(f"Rate this LSI Connect statement replacement: '{user_fix}'. Compare it to 'You threw the chair because you were angry.'")
         st.write(feedback)
+
+    render_navigation_footer()
 
 # ==========================================
 # PAGE: ROLEPLAY DOJO
@@ -482,6 +533,8 @@ elif st.session_state.module == "Dojo":
             st.session_state.roleplay_active = False
             st.session_state.roleplay_history = []
             st.rerun()
+
+    render_navigation_footer()
 
 # ==========================================
 # PAGE: EXAM
@@ -728,3 +781,5 @@ elif st.session_state.module == "Exam":
                 """, unsafe_allow_html=True)
             else:
                 st.error(f"Score: {score}/50 ({(score/50)*100}%). You need 40 to pass. Please review the modules.")
+
+    render_navigation_footer()
