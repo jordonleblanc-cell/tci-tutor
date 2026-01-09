@@ -19,12 +19,51 @@ st.markdown("""
     .main-header { font-size: 2.5rem; color: #1E3A8A; font-weight: 700; }
     .sub-header { font-size: 1.5rem; color: #3B82F6; font-weight: 600; }
     .highlight { background-color: #FEF3C7; padding: 10px; border-radius: 5px; border-left: 5px solid #F59E0B; }
-    .concept-card { background-color: #F3F4F6; padding: 20px; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .concept-card { background-color: #F3F4F6; color: #1F2937; padding: 20px; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
     .stButton>button { width: 100%; border-radius: 5px; }
     .success-box { background-color: #D1FAE5; padding: 15px; border-radius: 5px; color: #065F46; }
     .warning-box { background-color: #FEE2E2; padding: 15px; border-radius: 5px; color: #991B1B; }
 </style>
 """, unsafe_allow_html=True)
+
+# --- TCI KNOWLEDGE BASE (EXTRACTED FROM UPLOADED PDF) ---
+TCI_MANUAL_CONTENT = """
+CORE DEFINITIONS:
+1. THE GOAL OF TCI: To prevent and de-escalate potential crises, build capacity of staff to manage aggression, reduce injury, and create a learning culture.
+2. SETTING CONDITIONS: Anything that makes challenging behavior or traumatic stress responses more or less likely to occur. (e.g., hot room, hungry child, chaotic environment).
+3. PAIN-BASED BEHAVIOR: Behavior is an expression of need. Aggression, rigidity, withdrawal, impulsive outbursts, and self-injury are often expressions of trauma and pain.
+4. THE TRIUNE BRAIN:
+    - Thinking Brain (Neocortex): Reasoning, language. OFFLINE during crisis.
+    - Emotional Brain (Limbic/Amygdala): The "Sentry" scans for danger. Center for emotions.
+    - Survival Brain (Brain Stem): Reptilian brain. Responsible for Fight, Flight, Freeze. IN CHARGE during crisis.
+5. THE THERAPEUTIC MILIEU (5 SPACES):
+    - Ideological: The philosophy (Learning > Control).
+    - Physical: The environment (Safe, clean, calming).
+    - Cultural: Accepting/celebrating identity.
+    - Social: Relationships and routines.
+    - Emotional: Safety and emotional competence.
+6. THE 6 DOMAINS OF TCI SYSTEM:
+    1) Leadership & Program Support
+    2) Child & Family Inclusion
+    3) Clinical Participation
+    4) Supervision & Post-Crisis Response
+    5) Training & Competency Standards
+    6) Documentation, Incident Monitoring & Feedback
+7. THE STRESS MODEL OF CRISIS (PHASES):
+    - Baseline (Normal state)
+    - Triggering Event (Agitation)
+    - Escalation (Aggression/Defiance - INTERVENE HERE)
+    - Outburst (Violence - Safety Interventions)
+    - Recovery (Return to baseline - LSI)
+8. LIFE SPACE INTERVIEW (LSI) - "I ESCAPE":
+    - I: Isolate the conversation (Quiet place).
+    - E: Explore child's point of view.
+    - S: Summarize feelings and content.
+    - C: Connect trigger to behavior ("When X happened, you felt Y, so you did Z").
+    - A: Alternative responses (What to do next time).
+    - P: Plan/Practice.
+    - E: Enter back into routine.
+"""
 
 # --- STATE MANAGEMENT ---
 if "module" not in st.session_state: st.session_state.module = "Home"
@@ -75,18 +114,28 @@ def draw_stress_model():
     return fig
 
 def get_ai_tutor(prompt):
-    """Generic Tutor Logic"""
+    """Tutor Logic trained on specific PDF content"""
     if not api_key: return "⚠️ Please connect API Key."
     try:
         model = genai.GenerativeModel("gemini-2.0-flash")
-        full_prompt = f"You are a master TCI (Therapeutic Crisis Intervention) instructor. Concise, encouraging, and strictly adhering to TCI Cornell University standards. \n\n{prompt}"
+        # INJECT THE PDF CONTENT INTO SYSTEM PROMPT
+        full_prompt = f"""
+        You are a master TCI (Therapeutic Crisis Intervention) instructor. 
+        You MUST base your answers on the following official TCI definitions:
+        
+        {TCI_MANUAL_CONTENT}
+        
+        User Question: {prompt}
+        
+        Task: Provide a concise, encouraging answer strictly adhering to the definitions above.
+        """
         response = model.generate_content(full_prompt)
         return response.text
     except Exception as e:
         return f"Error: {e}"
 
 def run_roleplay(user_input, scenario):
-    """Handles the back-and-forth simulation."""
+    """Handles the back-and-forth simulation using TCI principles."""
     if not api_key: return "⚠️ API Key needed."
     
     model = genai.GenerativeModel("gemini-2.0-flash")
@@ -94,15 +143,20 @@ def run_roleplay(user_input, scenario):
     history_text = "\n".join([f"{msg['role']}: {msg['content']}" for msg in st.session_state.roleplay_history])
     
     system_prompt = f"""
-    You are roleplaying a traumatized child in a residential facility. 
+    You are roleplaying a traumatized child in a residential facility.
+    
+    CONTEXT (TCI PRINCIPLES):
+    - You are displaying "Pain-Based Behavior" (aggression/defiance is due to trauma/pain, not badness).
+    - You are currently in the 'Escalation' or 'Outburst' phase of the Stress Model.
+    - Your 'Thinking Brain' is offline; you are in 'Survival Brain' (Fight/Flight).
+    
     Scenario: {scenario}
     
     Rules for you (The Child):
     1. Act your age (approx 12-14).
-    2. Start in the 'Escalation' phase. 
-    3. If the user (Staff) validates your feelings and uses 'Drop the Rope', you de-escalate slightly.
-    4. If the user argues, orders, or threatens, you escalate significantly.
-    5. Keep responses short (1-2 sentences).
+    2. If the user (Staff) uses "Co-Regulation" strategies (silence, distance, validating feelings), you de-escalate.
+    3. If the user argues, lectures, or threatens (Power Struggle), you escalate significantly.
+    4. Keep responses short (1-2 sentences).
     
     Current History:
     {history_text}
@@ -122,7 +176,7 @@ def run_roleplay(user_input, scenario):
 st.sidebar.title("📍 TCI Navigator")
 nav_options = {
     "Home": "🏠 Dashboard",
-    "Mod1": "🧠 1. Prevention & Milieu",
+    "Mod1": "🧠 1. Prevention & Domains",
     "Mod2": "📈 2. Stress Model & Curve",
     "Mod3": "🛑 3. De-Escalation Tools",
     "Mod4": "🔥 4. The Outburst",
@@ -151,10 +205,10 @@ if st.session_state.module == "Home":
         Welcome to the enhanced TCI training platform. This tool is designed to move beyond reading and into **understanding and application**.
         
         **What you will learn:**
-        * **Prevention:** How to set up a safe environment.
+        * **Prevention:** How to set up a safe environment and the **6 Domains**.
         * **De-escalation:** Verbal tools to calm a crisis.
         * **Safety:** Protecting the child and yourself.
-        * **Recovery:** Turning crisis into a learning moment.
+        * **Recovery:** Turning crisis into a learning moment using **I ESCAPE**.
         """)
         
         st.info("💡 **Tip:** Use the 'AI Roleplay Dojo' to practice your skills against a simulated child before the exam!")
@@ -169,24 +223,42 @@ if st.session_state.module == "Home":
 elif st.session_state.module == "Mod1":
     st.markdown("<div class='main-header'>Module 1: Prevention & The Milieu</div>", unsafe_allow_html=True)
     
-    st.markdown("### 1.1 The Therapeutic Milieu")
-    st.write("The 'Milieu' is the living environment. We must manage 5 distinct spaces to prevent crisis.")
+    st.markdown("### 1.1 The TCI System: The Six Domains")
+    st.write("To effectively prevent crises, the organization must attend to these 6 domains:")
+    
+    col_d1, col_d2 = st.columns(2)
+    with col_d1:
+        st.markdown("""
+        * **1. Leadership & Support:** Clear philosophy (Learning > Control).
+        * **2. Child & Family Inclusion:** Active participation in decisions.
+        * **3. Clinical Participation:** Individual Crisis Support Plans (ICSP).
+        """)
+    with col_d2:
+        st.markdown("""
+        * **4. Supervision & Post-Crisis:** Coaching and debriefing.
+        * **5. Training:** Competency standards.
+        * **6. Documentation:** Incident monitoring and feedback.
+        """)
+
+    st.markdown("---")
+    st.markdown("### 1.2 The Therapeutic Milieu")
+    st.write("The 'Milieu' is the living environment. We must manage 5 distinct spaces.")
     
     tabs = st.tabs(["🏛️ Ideological", "🛋️ Physical", "🎭 Cultural", "🤝 Social", "❤️ Emotional"])
     
     with tabs[0]:
-        st.success("**Ideological:** The philosophy. (e.g., Do we believe children do well if they can?)")
+        st.success("**Ideological:** The philosophy. Do we value learning over control? Do we believe children do well if they can?")
     with tabs[1]:
-        st.warning("**Physical:** The setting. (Lights, noise, clutter, weapons, potential hazards).")
+        st.warning("**Physical:** The setting. Lighting, noise, clutter. Is it safe? Does it feel safe?")
     with tabs[2]:
-        st.info("**Cultural:** Accepting differences. (Food, customs, celebrations, avoiding bias).")
+        st.info("**Cultural:** Accepting and celebrating differences. Understanding the child's worldview.")
     with tabs[3]:
-        st.error("**Social:** Relationships. (Group dynamics, peer interactions, staff consistency).")
+        st.error("**Social:** Relationships, routines, and group dynamics. Peer interactions.")
     with tabs[4]:
-        st.success("**Emotional:** Safety. (Does the child feel safe to express feelings without ridicule?)")
+        st.success("**Emotional:** Safety. Does the child feel safe to express feelings without ridicule?")
 
     st.markdown("---")
-    st.markdown("### 1.2 The Triune Brain")
+    st.markdown("### 1.3 The Triune Brain")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -200,7 +272,7 @@ elif st.session_state.module == "Mod1":
         
         st.markdown("""
         <div class='concept-card'>
-        <h4>❤️ The Emotional Brain (Limbic)</h4>
+        <h4>❤️ The Emotional Brain (Limbic/Amygdala)</h4>
         The 'Sentry'. Scans for danger. Emotion center. <br>
         <i>Status during crisis:</i> <b>HIGH ALERT</b>
         </div>
@@ -215,7 +287,7 @@ elif st.session_state.module == "Mod1":
         """, unsafe_allow_html=True)
         
     with col2:
-        st.info("📝 **Key Takeaway:** You cannot reason with a child in the Survival Brain. You must lower their stress to get the Thinking Brain back online.")
+        st.info("📝 **Pain-Based Behavior:**\n\nAggression, withdrawal, and defiance are often expressions of trauma and pain. \n\n**Setting Conditions:** Anything that makes these behaviors more or less likely to occur.")
 
 # ==========================================
 # PAGE: MODULE 2 - STRESS MODEL
@@ -233,15 +305,15 @@ elif st.session_state.module == "Mod2":
         options=["Baseline", "Triggering Event", "Escalation", "Outburst", "Recovery"])
     
     if phase == "Baseline":
-        st.success("🟢 **Goal:** Support Environment. **Action:** Build relationships, maintain routines.")
+        st.success("🟢 **Phase:** Baseline\n\n**Goal:** Support Environment.\n\n**Action:** Build relationships, maintain routines.")
     elif phase == "Triggering Event":
-        st.warning("🟡 **Goal:** Manage Environment. **Action:** Remove trigger if possible, validate feelings.")
+        st.warning("🟡 **Phase:** Triggering Event\n\n**Goal:** Manage Environment.\n\n**Action:** Remove trigger if possible, validate feelings.")
     elif phase == "Escalation":
-        st.error("🟠 **Goal:** Provide Support. **Action:** Co-regulation, Directive statements, Leave the room.")
+        st.error("🟠 **Phase:** Escalation (Agitation)\n\n**Goal:** Provide Support.\n\n**Action:** Co-regulation, Directive statements, Leave the room. **INTERVENE HERE!**")
     elif phase == "Outburst":
-        st.error("🔴 **Goal:** Safety. **Action:** Remove the audience, Remove the target, Physical safety.")
+        st.error("🔴 **Phase:** Outburst (Violence)\n\n**Goal:** Safety.\n\n**Action:** Remove the audience, Remove the target, Physical safety.")
     elif phase == "Recovery":
-        st.info("🔵 **Goal:** Teach. **Action:** Life Space Interview (LSI).")
+        st.info("🔵 **Phase:** Recovery\n\n**Goal:** Teach.\n\n**Action:** Life Space Interview (LSI).")
 
 # ==========================================
 # PAGE: MODULE 3 - DE-ESCALATION
