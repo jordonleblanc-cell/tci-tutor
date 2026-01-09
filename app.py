@@ -147,26 +147,48 @@ def draw_stress_model():
     
     return fig
 
+def call_gemini_with_retry(model, prompt):
+    """
+    Wraps the API call in a retry loop to handle 429 errors (Quota Exceeded).
+    Retries up to 3 times with exponential backoff (2s, 4s, 8s).
+    """
+    for attempt in range(3):
+        try:
+            response = model.generate_content(prompt)
+            return response.text
+        except Exception as e:
+            error_msg = str(e)
+            if "429" in error_msg or "Quota exceeded" in error_msg:
+                # If we have attempts left, wait and retry
+                if attempt < 2:
+                    wait_time = 2 ** (attempt + 1) # 2s, then 4s
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    return "⚠️ **System Busy:** The free AI quota has been reached. Please wait 1 minute and try again."
+            else:
+                # Actual error unrelated to quota
+                return f"Error: {e}"
+
 def get_ai_tutor(prompt):
     """Tutor Logic trained on specific PDF content"""
     if not api_key: return "⚠️ Please connect API Key."
-    try:
-        model = genai.GenerativeModel("gemini-2.0-flash")
-        # INJECT THE PDF CONTENT INTO SYSTEM PROMPT
-        full_prompt = f"""
-        You are a master TCI (Therapeutic Crisis Intervention) instructor. 
-        You MUST base your answers on the following official TCI definitions:
-        
-        {TCI_MANUAL_CONTENT}
-        
-        User Question: {prompt}
-        
-        Task: Provide a concise, encouraging answer strictly adhering to the definitions above.
-        """
-        response = model.generate_content(full_prompt)
-        return response.text
-    except Exception as e:
-        return f"Error: {e}"
+    
+    model = genai.GenerativeModel("gemini-2.0-flash")
+    # INJECT THE PDF CONTENT INTO SYSTEM PROMPT
+    full_prompt = f"""
+    You are a master TCI (Therapeutic Crisis Intervention) instructor. 
+    You MUST base your answers on the following official TCI definitions:
+    
+    {TCI_MANUAL_CONTENT}
+    
+    User Question: {prompt}
+    
+    Task: Provide a concise, encouraging answer strictly adhering to the definitions above.
+    """
+    
+    # Use the robust retry function
+    return call_gemini_with_retry(model, full_prompt)
 
 def run_roleplay(user_input, scenario):
     """Handles the back-and-forth simulation using TCI principles."""
@@ -200,11 +222,8 @@ def run_roleplay(user_input, scenario):
     Respond as the child.
     """
     
-    try:
-        response = model.generate_content(system_prompt)
-        return response.text
-    except Exception as e:
-        return "Error in simulation."
+    # Use the robust retry function
+    return call_gemini_with_retry(model, system_prompt)
 
 # --- NAVIGATION SIDEBAR ---
 st.sidebar.title("📍 TCI Navigator")
