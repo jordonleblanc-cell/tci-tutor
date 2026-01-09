@@ -106,14 +106,16 @@ def render_navigation_footer():
     
     with col_prev:
         if current_idx > 0:
-            if st.button("⬅️ Previous Module", key="prev_btn"):
-                st.session_state.module = nav_keys[current_idx - 1]
+            prev_key = nav_keys[current_idx - 1]
+            if st.button("⬅️ Previous Module", key=f"prev_{prev_key}"):
+                st.session_state.module = prev_key
                 st.rerun()
     
     with col_next:
         if current_idx < len(nav_keys) - 1:
-            if st.button("Next Module ➡️", key="next_btn"):
-                st.session_state.module = nav_keys[current_idx + 1]
+            next_key = nav_keys[current_idx + 1]
+            if st.button("Next Module ➡️", key=f"next_{next_key}"):
+                st.session_state.module = next_key
                 st.rerun()
 
 def draw_stress_model():
@@ -213,19 +215,19 @@ if st.session_state.module not in nav_keys:
 
 current_idx = nav_keys.index(st.session_state.module)
 
-# The sidebar radio button
-selected_nav = st.sidebar.radio(
+# Callback to update session state when sidebar is clicked
+def update_nav_from_sidebar():
+    st.session_state.module = st.session_state.nav_radio
+
+# The sidebar radio button with callback
+st.sidebar.radio(
     "Go to:", 
     nav_keys, 
     index=current_idx,
     format_func=lambda x: nav_options[x],
-    key="nav_radio"
+    key="nav_radio",
+    on_change=update_nav_from_sidebar
 )
-
-# If the user clicked the radio button, update state and rerun
-if selected_nav != st.session_state.module:
-    st.session_state.module = selected_nav
-    st.rerun()
 
 st.sidebar.markdown("---")
 st.sidebar.metric("Progress", f"{len(st.session_state.roleplay_history)} Interactions", delta_color="off")
