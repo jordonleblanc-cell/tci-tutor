@@ -487,7 +487,8 @@ elif st.session_state.module == "Dojo":
 # PAGE: EXAM
 # ==========================================
 elif st.session_state.module == "Exam":
-    st.markdown("<div class='main-header'>📝 Final Certification Exam</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-header'>📝 Comprehensive Practice Exam</div>", unsafe_allow_html=True)
+    st.info("ℹ️ **Note:** This is a practice tool. The official TCI certification exam must be taken in person.")
     st.write("Answer all 50 questions. Passing score: 80% (40/50).")
 
     # List of 50 Questions
@@ -721,8 +722,8 @@ elif st.session_state.module == "Exam":
                 st.success(f"🎉 PASSED! Score: {score}/50 ({(score/50)*100}%)")
                 st.markdown("""
                 <div class='success-box'>
-                <b>CERTIFICATE OF COMPLETION</b><br>
-                This user has demonstrated competency in Therapeutic Crisis Intervention concepts.
+                <b>PRACTICE EXAM COMPLETE</b><br>
+                You have demonstrated competency in TCI concepts and are ready for the real in-person exam.
                 </div>
                 """, unsafe_allow_html=True)
             else:
